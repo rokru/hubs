@@ -87,6 +87,9 @@ export default class SceneEntryManager {
 
     this._spawnAvatar();
 
+    // Kruse: Run conditional placement of Digital Clock 
+    this._digitalClock();
+
     this.scene.systems["hubs-systems"].soundEffectsSystem.playSoundOneShot(SOUND_ENTER_SCENE);
 
     if (isBotMode) {
@@ -553,6 +556,27 @@ export default class SceneEntryManager {
     this.scene.addEventListener("photo_taken", e => this.hubChannel.sendMessage({ src: e.detail }, "photo"));
     this.scene.addEventListener("video_taken", e => this.hubChannel.sendMessage({ src: e.detail }, "video"));
   };
+
+  // Kruse: Place "Digital Clock" at position of proxy with class "digital-clock" if this exists
+  _digitalClock = () => {
+    // var proxy = document.querySelector('.digital-clock');
+    // if (proxy == null) {
+    //   console.log("No Proxy for Digital Clock in Scene");
+    //   return;
+    // }
+    // console.log("Found Digital Clock Proxy");
+    // console.log("Proxy Position: " + proxy.object3D.position.x + " " + proxy.object3D.position.y + " " + proxy.object3D.position.z);
+    const clock = document.createElement("a-entity");
+    // //   // AFRAME.scene[0].appendChild(clock);
+    this.scene.appendChild(clock);
+    // proxy.appendChild(clock);
+    clock.setAttribute("digital-clock");
+    console.log("Add Digital Clock");
+    // clock.object3D.position.set(proxy.object3D.position.x, proxy.object3D.position.y, proxy.object3D.position.z);
+    console.log("Clock Position: " + clock.object3D.position.x + " " + clock.object3D.position.y + " " + clock.object3D.position.z);
+    // proxy.object3D.visible = false;;
+  }
+
 
   _spawnAvatar = () => {
     this.avatarRig.setAttribute("networked", "template: #remote-avatar; attachTemplateToLocal: false;");
