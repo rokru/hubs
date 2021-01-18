@@ -154,10 +154,24 @@ export const addMedia = (
 ) => {
   const scene = AFRAME.scenes[0];
 
-  const entity = document.createElement("a-entity");
+ const entity = document.createElement("a-entity");
 
+
+  /*if(guessContentType(src.name) === "custom/object")
+  {
+    console.log("custom/object");
+    console.log("src", src);
+    console.log("template", template);
+    console.log("contentOrigin", contentOrigin);
+
+    //entity = document.createElement("a-cylinder-test");
+    entity.setAttribute("custom-attribute", true);
+  }
+*/
   if (networked) {
+    console.log("networked template", template);
     entity.setAttribute("networked", { template: template });
+
   } else {
     const templateBody = document
       .importNode(document.body.querySelector(template).content, true)
@@ -206,12 +220,18 @@ export const addMedia = (
       resolve(1);
     }
   });
+
   if (needsToBeUploaded) {
+    console.log("needsToBeUploaded");
     // Video camera videos are converted to mp4 for compatibility
     const desiredContentType = contentSubtype === "video-camera" ? "video/mp4" : src.type || guessContentType(src.name);
+    
+    console.log("desiredContentType", desiredContentType);
 
     upload(src, desiredContentType)
       .then(response => {
+
+        console.log("upload", src);
         const srcUrl = new URL(proxiedUrlFor(response.origin));
         srcUrl.searchParams.set("token", response.meta.access_token);
         entity.setAttribute("media-loader", { resolve: false, src: srcUrl.href, fileId: response.file_id });
@@ -233,7 +253,6 @@ export const addMedia = (
       scene.emit("object_spawned", { objectType });
     });
   }
-
   return { entity, orientation };
 };
 

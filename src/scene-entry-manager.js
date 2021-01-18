@@ -24,7 +24,10 @@ import { SOUND_ENTER_SCENE } from "./systems/sound-effects-system";
 
 const isIOS = AFRAME.utils.device.isIOS();
 
+export let GROUP_ID = 1;
+
 export default class SceneEntryManager {
+
   constructor(hubChannel, authChannel, history) {
     this.hubChannel = hubChannel;
     this.authChannel = authChannel;
@@ -37,7 +40,11 @@ export default class SceneEntryManager {
     this._entered = false;
     this.performConditionalSignIn = () => {};
     this.history = history;
+
+    this.test = "Hello World";
   }
+
+  
 
   init = () => {
     this.whenSceneLoaded(() => {
@@ -274,31 +281,71 @@ export default class SceneEntryManager {
 
   _setupMedia = mediaStream => {
     const offset = { x: 0, y: 0, z: -1.5 };
-    const spawnMediaInfrontOfPlayer = (src, contentOrigin) => {
-      if (!this.hubChannel.can("spawn_and_move_media")) return;
-      const { entity, orientation } = addMedia(
-        src,
-        "#interactable-media",
-        contentOrigin,
-        null,
-        !(src instanceof MediaStream),
-        true
-      );
-      orientation.then(or => {
-        entity.setAttribute("offset-relative-to", {
-          target: "#avatar-pov-node",
-          offset,
-          orientation: or
-        });
-      });
 
-      return entity;
+    const spawnMediaInfrontOfPlayer = (src, contentOrigin, template) => {
+      template = template? template : "interactable-media";
+
+      if (!this.hubChannel.can("spawn_and_move_media")) return;
+
+        const {entity, orientation } = addMedia(
+          src,
+          "#"+template,
+          contentOrigin,
+          null,
+          !(src instanceof MediaStream),
+          true
+        );
+
+        if(contentOrigin != ObjectContentOrigins.CUSTOM)
+        {
+          orientation.then(or => {
+            entity.setAttribute("offset-relative-to", {
+              target: "#avatar-pov-node",
+              offset,
+              orientation: or
+            });
+          });
+        }
+  
+        entity.setAttribute("group-id", GROUP_ID);
+
+        return entity;
     };
 
     this.scene.addEventListener("add_media", e => {
-      const contentOrigin = e.detail instanceof File ? ObjectContentOrigins.FILE : ObjectContentOrigins.URL;
-
+      const contentOrigin = e.detail instanceof File ? ObjectContentOrigins.FILE : ObjectContentOrigins.URL;      
       spawnMediaInfrontOfPlayer(e.detail, contentOrigin);
+    });
+
+    this.scene.addEventListener("set-group-id", e => {
+      GROUP_ID = e.detail;
+    });
+
+    this.scene.addEventListener("create_object", e => {
+      var spawnPosition;
+      var entity;
+
+
+      this.test="This is a test";
+      console.log("TEST LOG:", this.test);
+
+      switch(e.detail.action)
+      {
+        case "website":
+          spawnPosition = this.scene.querySelector("[class='"+e.detail.position+"']");
+          entity = spawnMediaInfrontOfPlayer(e.detail.website, ObjectContentOrigins.CUSTOM);
+          entity.setAttribute("position", spawnPosition.object3D.position);
+        break;
+        case "local_glb":
+          var url = new URL(location.href, "../assets/models/"+e.detail.glb);            
+          entity = spawnMediaInfrontOfPlayer(url, ObjectContentOrigins.URL);   
+          break;
+        case "clock":
+          entity = spawnMediaInfrontOfPlayer("www.google.de", ObjectContentOrigins.CUSTOM, "clock");
+        break;
+      }
+
+
     });
 
     const handlePinEvent = (e, pinned) => {
@@ -371,7 +418,6 @@ export default class SceneEntryManager {
 
     document.addEventListener("drop", e => {
       e.preventDefault();
-
       let url = e.dataTransfer.getData("url");
 
       if (!url) {
@@ -386,9 +432,13 @@ export default class SceneEntryManager {
       const files = e.dataTransfer.files;
 
       if (url) {
+        console.log("spawn by url");
+
         spawnMediaInfrontOfPlayer(url, ObjectContentOrigins.URL);
       } else {
         for (const file of files) {
+          console.log("spawn by file");
+
           spawnMediaInfrontOfPlayer(file, ObjectContentOrigins.FILE);
         }
       }

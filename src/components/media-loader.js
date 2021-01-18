@@ -29,12 +29,15 @@ let loadingObjectEnvMap;
 let loadingObject;
 
 waitForDOMContentLoaded().then(() => {
+  console.log("waitForDOMContentLoaded");
   loadModel(loadingObjectSrc).then(gltf => {
     loadingObject = gltf;
   });
 });
 
 const fetchContentType = url => {
+  console.log("fetchContentType");
+
   return fetch(url, { method: "HEAD" }).then(r => r.headers.get("content-type"));
 };
 
@@ -76,6 +79,8 @@ AFRAME.registerComponent("media-loader", {
       NAF.utils
         .getNetworkedEntity(this.el)
         .then(networkedEl => {
+          console.log("getNetworkedEntity");
+
           this.networkedEl = networkedEl;
         })
         .catch(() => {}); //ignore exception, entity might not be networked
@@ -85,6 +90,8 @@ AFRAME.registerComponent("media-loader", {
   },
 
   updateScale: (function() {
+    console.log("updateScale");
+
     const center = new THREE.Vector3();
     const originalMeshMatrix = new THREE.Matrix4();
     const desiredObjectMatrix = new THREE.Matrix4();
@@ -152,6 +159,8 @@ AFRAME.registerComponent("media-loader", {
   },
 
   remove() {
+    console.log("remove");
+
     if (this.data.linkedEl) {
       this.data.linkedEl.removeEventListener("componentremoved", this.handleLinkedElRemoved);
     }
@@ -168,6 +177,8 @@ AFRAME.registerComponent("media-loader", {
   },
 
   onError() {
+    console.log("onError");
+
     this.el.removeAttribute("gltf-model-plus");
     this.el.removeAttribute("media-pager");
     this.el.removeAttribute("media-video");
@@ -177,10 +188,13 @@ AFRAME.registerComponent("media-loader", {
   },
 
   showLoader() {
+    console.log("showLoader");
+
     if (this.el.object3DMap.mesh) {
       this.clearLoadingTimeout();
       return;
     }
+
     const useFancyLoader = !!loadingObject;
 
     const mesh = useFancyLoader
@@ -222,6 +236,9 @@ AFRAME.registerComponent("media-loader", {
       (!this.networkedEl || NAF.utils.isMine(this.networkedEl)) &&
       this.data.playSoundEffect
     ) {
+
+      console.log("element entered scene");
+
       this.loadingSoundEffect = this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(
         SOUND_MEDIA_LOADING,
         this.el.object3D,
@@ -269,6 +286,8 @@ AFRAME.registerComponent("media-loader", {
   })(),
 
   onMediaLoaded(physicsShape = null, shouldUpdateScale) {
+    console.log("onMediaLoaded");
+
     const el = this.el;
     this.clearLoadingTimeout();
 
@@ -318,6 +337,8 @@ AFRAME.registerComponent("media-loader", {
   },
 
   refresh() {
+    console.log("refresh");
+
     if (this.networkedEl && !NAF.utils.isMine(this.networkedEl) && !NAF.utils.takeOwnership(this.networkedEl)) return;
 
     // When we refresh, we bump the version to the current timestamp.
@@ -327,9 +348,13 @@ AFRAME.registerComponent("media-loader", {
   },
 
   async update(oldData, forceLocalRefresh) {
+    console.log("update");
+
     const { version, contentSubtype } = this.data;
     let src = this.data.src;
     if (!src) return;
+
+    console.log("src",src);
 
     const srcChanged = oldData.src !== src;
     const versionChanged = !!(oldData.version && oldData.version !== version);
@@ -372,8 +397,13 @@ AFRAME.registerComponent("media-loader", {
 
       // We want to resolve and proxy some hubs urls, like rooms and scene links,
       // but want to avoid proxying assets in order for this to work in dev environments
+      
+      console.log("guessContentType(src)", guessContentType(src));
+
       const isLocalModelAsset =
-        isNonCorsProxyDomain(parsedUrl.hostname) && (guessContentType(src) || "").startsWith("model/gltf");
+      isNonCorsProxyDomain(parsedUrl.hostname) && (guessContentType(src) || "").startsWith("model/gltf");
+     
+      console.log("isLocalModelAsset", isLocalModelAsset);
 
       if (this.data.resolve && !src.startsWith("data:") && !src.startsWith("hubs:") && !isLocalModelAsset) {
         const is360 = !!(this.data.mediaOptions.projection && this.data.mediaOptions.projection.startsWith("360"));
@@ -467,6 +497,8 @@ AFRAME.registerComponent("media-loader", {
           this.el.setAttribute("position-at-border__freeze-unprivileged", { isFlat: true });
         }
       } else if (contentType.startsWith("image/")) {
+
+        console.log("is image true");
         this.el.removeAttribute("gltf-model-plus");
         this.el.removeAttribute("media-video");
         this.el.removeAttribute("media-pdf");
@@ -474,6 +506,9 @@ AFRAME.registerComponent("media-loader", {
         this.el.addEventListener(
           "image-loaded",
           e => {
+
+            console.log("image-loaded");
+
             this.onMediaLoaded(e.detail.projection === "flat" ? SHAPE.BOX : null);
 
             if (contentSubtype === "photo-camera") {
@@ -485,6 +520,7 @@ AFRAME.registerComponent("media-loader", {
           },
           { once: true }
         );
+
         this.el.setAttribute("floaty-object", { reduceAngularFloat: true, releaseGravity: -1 });
         let batch = !disableBatching && forceImageBatching;
         if (this.data.mediaOptions.hasOwnProperty("batch") && !this.data.mediaOptions.batch) {
@@ -614,7 +650,13 @@ AFRAME.registerComponent("media-loader", {
         if (this.el.components["position-at-border__freeze-unprivileged"]) {
           this.el.setAttribute("position-at-border__freeze-unprivileged", { isFlat: true });
         }
-      } else {
+      } 
+    else if (contentType.startsWith("custom/object"))
+      {
+          console.log("is custom object...load stuff here");
+      }
+      
+      else {
         throw new Error(`Unsupported content type: ${contentType}`);
       }
     } catch (e) {

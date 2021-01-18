@@ -6,7 +6,8 @@ export const ObjectContentOrigins = {
   URL: 1,
   FILE: 2,
   CLIPBOARD: 3,
-  SPAWNER: 4
+  SPAWNER: 4,
+  CUSTOM: 5
 };
 
 // Enumeration of spawnable object types, used for telemetry, which encapsulates

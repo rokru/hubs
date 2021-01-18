@@ -85,6 +85,59 @@ function registerNetworkSchemas() {
   NAF.schemas.add({
     template: "#interactable-media",
     components: [
+      'visible',
+      'group-id',
+      {
+        component: "position",
+        requiresNetworkUpdate: vectorRequiresUpdate(0.001)
+      },
+      {
+        component: "rotation",
+        requiresNetworkUpdate: vectorRequiresUpdate(0.5)
+      },
+      {
+        component: "scale",
+        requiresNetworkUpdate: vectorRequiresUpdate(0.001)
+      },
+      // TODO: Optimize checking mediaOptions with requiresNetworkUpdate.
+      "media-loader",
+      {
+        component: "media-video",
+        property: "time"
+      },
+      {
+        component: "media-video",
+        property: "videoPaused"
+      },
+      {
+        component: "media-pdf",
+        property: "index"
+      },
+      "pinnable"
+    ],
+    nonAuthorizedComponents: [
+      {
+        component: "media-video",
+        property: "time"
+      },
+      {
+        component: "media-video",
+        property: "videoPaused"
+      },
+      {
+        component: "media-pager",
+        property: "index"
+      }
+    ]
+  });
+
+  NAF.schemas.add({
+    template: "#clock",
+    components: [
+      {
+        component: "timer-component",
+        property: "TimeOutTime"
+      },
       {
         component: "position",
         requiresNetworkUpdate: vectorRequiresUpdate(0.001)
@@ -175,6 +228,40 @@ function registerNetworkSchemas() {
     ],
     // TODO we probably want media frames to support permissioning of some form
     nonAuthorizedComponents: ["media-frame"]
+  });
+
+  NAF.schemas.add({
+    template: "#interactable-trigger",
+    components: [
+      {
+        component: "trigger",
+        property: "targetId"
+      },
+      {
+        component: "trigger",
+        property: "originalTargetScale"
+      }
+    ],
+    nonAuthorizedComponents: ["trigger"]
+  });
+
+  NAF.schemas.add({
+    template: "#interactable-cylinder",
+    components: [
+      {
+        component: "cylinder",
+        property: "test1"
+      },
+      {
+        component: "test2",
+        property: "targetId"
+      },
+      {
+        component: "test3",
+        property: "test3"
+      }     
+    ],
+    nonAuthorizedComponents: ["trigger"]
   });
 
   NAF.schemas.add({

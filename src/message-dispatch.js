@@ -1,10 +1,12 @@
 import "./utils/configs";
-import { getAbsoluteHref } from "./utils/media-url-utils";
+import { getAbsoluteHref, guessContentType } from "./utils/media-url-utils";
 import { isValidSceneUrl } from "./utils/scene-url-utils";
 import { getMessages } from "./utils/i18n";
 import { spawnChatMessage } from "./react-components/chat-message";
 import { SOUND_QUACK, SOUND_SPECIAL_QUACK } from "./systems/sound-effects-system";
 import ducky from "./assets/models/DuckyMesh.glb";
+import { ObjectContentOrigins } from "./object-types";
+import GROUP_ID from "./scene-entry-manager";
 
 let uiRoot;
 // Handles user-entered messages
@@ -33,6 +35,8 @@ export default class MessageDispatch {
   };
 
   dispatchCommand = async (command, ...args) => {
+    console.log("dispatchCommand", command);
+
     const entered = this.scene.is("entered");
     uiRoot = uiRoot || document.getElementById("ui-root");
     const isGhost = !entered && uiRoot && uiRoot.firstChild && uiRoot.firstChild.classList.contains("isGhost");
@@ -84,8 +88,59 @@ export default class MessageDispatch {
         this.entryManager.exitScene();
         this.remountUI({ roomUnavailableReason: "left" });
         break;
+      case "hide-group":          
+          const entities = this.scene.querySelectorAll("[group-id='"+args[0]+"']");
+          for (let i = 0; i < entities.length; i++) {
+            console.log(entities[i]);
+            
+            if(!NAF.utils.isMine(entities[i]))  
+            {
+              NAF.utils.takeOwnership(entities[i]);
+            }       
+
+            entities[i].setAttribute("visible",false);
+          }
+        break;
+      case "show-group":
+          const ents = this.scene.querySelectorAll("[group-id='"+args[0]+"']");
+          for (let i = 0; i < ents.length; i++) {
+            console.log(ents[i]);
+
+            if(!NAF.utils.isMine(ents[i]))  
+            {
+              NAF.utils.takeOwnership(ents[i]);
+            }         
+
+            ents[i].setAttribute("visible",true);
+          }
+        break;
+        case "set-group-id":
+          this.scene.emit("set-group-id",  args[0]);
+        break;
+      case "create":
+        if(args[0]==="")
+        {
+          return;
+        }
+        else if(args[0].startsWith("www."))
+        {
+          this.scene.emit("create_object",  {action:"website", website:args[0], position:args[1]});
+        }
+        else if(args[0]==="clock")
+        {
+          this.scene.emit("create_object",  {action:"clock", position:args[1]}, "clock");
+        }
+        else if(args[0].includes(".glb"))
+        {
+          spawnChatMessage(getAbsoluteHref(location.href, "./assets/models/"+args[0]));
+        }
+
+        break;
       case "duck":
         spawnChatMessage(getAbsoluteHref(location.href, ducky));
+
+        console.log("location.href", location.href);
+
         if (Math.random() < 0.01) {
           this.scene.systems["hubs-systems"].soundEffectsSystem.playSoundOneShot(SOUND_SPECIAL_QUACK);
         } else {
@@ -101,6 +156,9 @@ export default class MessageDispatch {
         break;
       case "scene":
         if (args[0]) {
+
+          console.log("chat arguments:", args[0], args[1]);
+
           if (await isValidSceneUrl(args[0])) {
             err = this.hubChannel.updateScene(args[0]);
             if (err === "unauthorized") {

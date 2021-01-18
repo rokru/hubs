@@ -213,8 +213,12 @@ export async function spawnChatMessage(body, from) {
 
   try {
     const url = new URL(coerceToUrl(body));
+
+    console.log("URL",url);
+    console.log("body",body);
+    
     if (url.host) {
-      document.querySelector("a-scene").emit("add_media", body);
+      document.querySelector("a-scene").emit("add_media", body, true);
       return;
     }
   } catch (e) {
