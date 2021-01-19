@@ -169,7 +169,6 @@ export const addMedia = (
   }
 */
   if (networked) {
-    console.log("networked template", template);
     entity.setAttribute("networked", { template: template });
 
   } else {
@@ -222,16 +221,12 @@ export const addMedia = (
   });
 
   if (needsToBeUploaded) {
-    console.log("needsToBeUploaded");
     // Video camera videos are converted to mp4 for compatibility
     const desiredContentType = contentSubtype === "video-camera" ? "video/mp4" : src.type || guessContentType(src.name);
     
-    console.log("desiredContentType", desiredContentType);
-
     upload(src, desiredContentType)
       .then(response => {
 
-        console.log("upload", src);
         const srcUrl = new URL(proxiedUrlFor(response.origin));
         srcUrl.searchParams.set("token", response.meta.access_token);
         entity.setAttribute("media-loader", { resolve: false, src: srcUrl.href, fileId: response.file_id });

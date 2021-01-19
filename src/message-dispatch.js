@@ -88,6 +88,24 @@ export default class MessageDispatch {
         this.entryManager.exitScene();
         this.remountUI({ roomUnavailableReason: "left" });
         break;
+        case "mute":
+          this.scene.emit("action_mute");
+          break;
+      case "megaphone":
+        console.log("megaphone", args);
+        
+        const avatarHead = this.scene.querySelector("[id='avatar-rig'");
+        
+        if(args[0]==="on")
+        {
+          avatarHead.setAttribute("isMegaphone", true);
+        }
+        else if(args[0]==="off")
+        {
+          avatarHead.setAttribute("isMegaphone", false);
+        }
+        
+      break;
       case "hide-group":          
           const entities = this.scene.querySelectorAll("[group-id='"+args[0]+"']");
           for (let i = 0; i < entities.length; i++) {

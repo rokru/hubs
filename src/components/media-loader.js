@@ -29,14 +29,12 @@ let loadingObjectEnvMap;
 let loadingObject;
 
 waitForDOMContentLoaded().then(() => {
-  console.log("waitForDOMContentLoaded");
   loadModel(loadingObjectSrc).then(gltf => {
     loadingObject = gltf;
   });
 });
 
 const fetchContentType = url => {
-  console.log("fetchContentType");
 
   return fetch(url, { method: "HEAD" }).then(r => r.headers.get("content-type"));
 };
@@ -90,7 +88,6 @@ AFRAME.registerComponent("media-loader", {
   },
 
   updateScale: (function() {
-    console.log("updateScale");
 
     const center = new THREE.Vector3();
     const originalMeshMatrix = new THREE.Matrix4();
@@ -177,7 +174,6 @@ AFRAME.registerComponent("media-loader", {
   },
 
   onError() {
-    console.log("onError");
 
     this.el.removeAttribute("gltf-model-plus");
     this.el.removeAttribute("media-pager");
@@ -188,7 +184,6 @@ AFRAME.registerComponent("media-loader", {
   },
 
   showLoader() {
-    console.log("showLoader");
 
     if (this.el.object3DMap.mesh) {
       this.clearLoadingTimeout();
@@ -286,7 +281,6 @@ AFRAME.registerComponent("media-loader", {
   })(),
 
   onMediaLoaded(physicsShape = null, shouldUpdateScale) {
-    console.log("onMediaLoaded");
 
     const el = this.el;
     this.clearLoadingTimeout();
@@ -348,13 +342,11 @@ AFRAME.registerComponent("media-loader", {
   },
 
   async update(oldData, forceLocalRefresh) {
-    console.log("update");
 
     const { version, contentSubtype } = this.data;
     let src = this.data.src;
     if (!src) return;
 
-    console.log("src",src);
 
     const srcChanged = oldData.src !== src;
     const versionChanged = !!(oldData.version && oldData.version !== version);
@@ -398,12 +390,9 @@ AFRAME.registerComponent("media-loader", {
       // We want to resolve and proxy some hubs urls, like rooms and scene links,
       // but want to avoid proxying assets in order for this to work in dev environments
       
-      console.log("guessContentType(src)", guessContentType(src));
-
       const isLocalModelAsset =
       isNonCorsProxyDomain(parsedUrl.hostname) && (guessContentType(src) || "").startsWith("model/gltf");
      
-      console.log("isLocalModelAsset", isLocalModelAsset);
 
       if (this.data.resolve && !src.startsWith("data:") && !src.startsWith("hubs:") && !isLocalModelAsset) {
         const is360 = !!(this.data.mediaOptions.projection && this.data.mediaOptions.projection.startsWith("360"));
@@ -498,7 +487,6 @@ AFRAME.registerComponent("media-loader", {
         }
       } else if (contentType.startsWith("image/")) {
 
-        console.log("is image true");
         this.el.removeAttribute("gltf-model-plus");
         this.el.removeAttribute("media-video");
         this.el.removeAttribute("media-pdf");
@@ -506,8 +494,6 @@ AFRAME.registerComponent("media-loader", {
         this.el.addEventListener(
           "image-loaded",
           e => {
-
-            console.log("image-loaded");
 
             this.onMediaLoaded(e.detail.projection === "flat" ? SHAPE.BOX : null);
 

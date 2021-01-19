@@ -327,7 +327,6 @@ export default class SceneEntryManager {
 
 
       this.test="This is a test";
-      console.log("TEST LOG:", this.test);
 
       switch(e.detail.action)
       {

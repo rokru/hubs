@@ -170,19 +170,21 @@ AFRAME.registerComponent("scale-audio-feedback", {
     if (!this.el.object3D.visible) return;
     if (!this.cameraEl) return;
     if (!this.analyser) this.analyser = getAnalyser(this.el);
-
+    
+    
+    
     const { minScale, maxScale } = this.data;
-
+    
     const { object3D } = this.el;
-
+    
     const scale = getAudioFeedbackScale(
       this.el.object3D,
       this.cameraEl.object3DMap.camera,
       minScale,
       maxScale,
       this.analyser ? this.analyser.volume : 0
-    );
-
+      );
+      
     object3D.scale.setScalar(scale);
     object3D.matrixNeedsUpdate = true;
   }

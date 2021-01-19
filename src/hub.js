@@ -208,6 +208,7 @@ import "./components/tools/drawing-manager";
 import "./components/body-helper";
 import "./components/shape-helper";
 import "./components/ill-interactions";
+import "./components/megaphone";
 import "./components/timer-component";
 
 import registerNetworkSchemas from "./network-schemas";

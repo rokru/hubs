@@ -25,13 +25,13 @@
     }
     </script>
     <script src="ill-interactions.js"></script>
+    <script src="megaphone.js"></script>
 </head>
 
 <body>
     <div id="support-root"></div>
 
     <a-scene
-        ill-interactions
         loading-screen="enabled: false"
         hubs-systems
         capture-system
@@ -1275,6 +1275,8 @@
 
         <!-- Avatar Rig -->
         <a-entity
+            megaphone
+            isMegaphone="false"
             id="avatar-rig"
             ik-root
             player-info
