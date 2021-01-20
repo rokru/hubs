@@ -95,7 +95,6 @@ export default class MessageDispatch {
         console.log("megaphone", args);
         
         const avatarHead = this.scene.querySelector("[id='avatar-rig'");
-        avatarHead.components['megaphone'].block();
 
         if(args[0]==="on")
         {

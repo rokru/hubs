@@ -8,8 +8,14 @@ AFRAME.registerComponent('megaphone', {
       init: function () {
         //this.data.avatarAudioSource = this.el.getAttribute("avatar-audio-source");
         this.isActive = this.el.getAttribute("isMegaphone")=="true";
-        this.avatarAudioSource = this.el.parentNode.querySelector("[avatar-audio-source]").components['avatar-audio-source'];
-    },
+        this.avatarAudioSource = this.el.components['avatar-audio-source'];
+        console.log("megaphone avatarAudioSource", this.avatarAudioSource);
+        
+        if(this.el.id == "avatar-rig")
+        {
+          this.isLocked = true;
+        }
+      },
 
     set: function(isMegaphoneActive)
     {      
@@ -58,15 +64,17 @@ AFRAME.registerComponent('megaphone', {
     block: function(){
         this.isLocked = true;
         console.log("megaphone block");
-    },
-    tick: function()
-    {
-      if(this.isLocked)
+      },
+      tick: function()
       {
-        return;
-      }
-      else
-      {
+        
+        if(this.isLocked)
+        {
+          return;
+        }
+        else
+        {
+        //console.log("megaphone element", this.el);
         this.set(this.el.getAttribute("isMegaphone")=="true");
       }
     },
