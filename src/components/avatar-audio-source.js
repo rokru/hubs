@@ -92,6 +92,7 @@ AFRAME.registerComponent("avatar-audio-source", {
   },
 
   update(oldData) {
+    console.log("avatarAudioSource update");
     if (this.isCreatingAudio) return;
 
     const audio = this.el.getObject3D(this.attrName);
