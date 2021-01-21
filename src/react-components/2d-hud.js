@@ -17,6 +17,8 @@ import PenIcon from "../assets/images/pen.svgi";
 import PenIconActive from "../assets/images/pen_active.svgi";
 import CameraIcon from "../assets/images/camera.svgi";
 import CameraIconActive from "../assets/images/camera_active.svgi";
+import Mega from "../assets/images/megaphone.svgi";
+import MegaOff from "../assets/images/megaphone-off.svgi";
 import Mic0 from "../assets/images/mic-0.svgi";
 import Mic1 from "../assets/images/mic-1.svgi";
 import Mic2 from "../assets/images/mic-2.svgi";
@@ -41,12 +43,18 @@ const MIC_ICONS = {
   off: [MicOff0, MicOff1, MicOff2, MicOff3, MicOff4, MicOff5, MicOff6, MicOff7]
 };
 
+const MEGAPHONE_ICONS = {
+  on: [Mega],
+  off: [MegaOff]
+};
+
 const noop = () => {};
 
 class TopHUD extends Component {
   static propTypes = {
     scene: PropTypes.object,
     muted: PropTypes.bool,
+    megaphone: PropTypes.bool,
     isCursorHoldingPen: PropTypes.bool,
     hasActiveCamera: PropTypes.bool,
     frozen: PropTypes.bool,
@@ -58,6 +66,7 @@ class TopHUD extends Component {
     activeTip: PropTypes.string,
     history: PropTypes.object,
     onToggleMute: PropTypes.func,
+    onToggleMegaphone: PropTypes.func,
     onSpawnPen: PropTypes.func,
     onSpawnCamera: PropTypes.func,
     onShareVideo: PropTypes.func,
@@ -269,6 +278,7 @@ class TopHUD extends Component {
 
     const micLevel = this.state.micLevel;
     const micIcon = MIC_ICONS[this.props.muted ? "off" : "on"][micLevel];
+    const megaphoneIcon = MEGAPHONE_ICONS[this.props.megaphone ? "on" : "off"][0];
     // Hide buttons when frozen.
     return (
       <div className={cx(styles.container, styles.top, styles.unselectable, uiStyles.uiInteractive)}>
@@ -286,6 +296,15 @@ class TopHUD extends Component {
             >
               <InlineSVG className={cx(styles.iconButtonIcon)} src={micIcon} />
             </div>
+          <div
+            className={cx(styles.iconButton)}
+            title={this.props.megaphone ? "Megaphone on" : "Megaphone off"}
+            role="button"
+            onClick={this.props.onToggleMegaphone}
+          >
+              <InlineSVG className={cx(styles.iconButtonIcon)} src={megaphoneIcon} />
+    
+              </div>
             <div
               className={cx(styles.iconButton, {
                 [styles.disabled]: this.state.mediaDisabled

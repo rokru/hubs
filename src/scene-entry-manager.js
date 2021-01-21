@@ -321,6 +321,15 @@ export default class SceneEntryManager {
       GROUP_ID = e.detail;
     });
 
+    this.scene.addEventListener("action_megaphone", e => {
+      console.log("action_megaphone", e.detail);
+
+      const avatarHead = this.scene.querySelector("[id='avatar-rig'");
+
+      avatarHead.setAttribute("isMegaphone", e.detail);
+
+    });
+
     this.scene.addEventListener("create_object", e => {
       var spawnPosition;
       var entity;

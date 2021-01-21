@@ -152,6 +152,7 @@ class UIRoot extends Component {
     oauthInfo: PropTypes.array,
     isCursorHoldingPen: PropTypes.bool,
     hasActiveCamera: PropTypes.bool,
+    megaphone: PropTypes.bool,
     onMediaSearchResultEntrySelected: PropTypes.func,
     onAvatarSaved: PropTypes.func,
     activeTips: PropTypes.object,
@@ -199,6 +200,7 @@ class UIRoot extends Component {
     secondsRemainingBeforeAutoExit: Infinity,
 
     muted: false,
+    megaphone: false,
     frozen: false,
 
     exited: false,
@@ -452,7 +454,8 @@ class UIRoot extends Component {
 
   // TODO: we need to come up with a cleaner way to handle the shared state between aframe and react than emmitting events and setting state on the scene
   onAframeStateChanged = e => {
-    if (!(e.detail === "muted" || e.detail === "frozen")) return;
+    console.log("onAframeStateChanged", e.detail);
+    if (!(e.detail === "muted" || e.detail === "frozen" || e.detail === "megaphone" )) return;
     this.setState({
       [e.detail]: this.props.scene.is(e.detail)
     });
@@ -472,6 +475,12 @@ class UIRoot extends Component {
 
   toggleMute = () => {
     this.props.scene.emit("action_mute");
+  };
+
+  toggleMegaphone = () => {
+    this.state.megaphone = !this.state.megaphone;
+    this.updateSubscribedState();
+    this.props.scene.emit("action_megaphone", this.state.megaphone);
   };
 
   shareVideo = mediaSource => {
@@ -2101,6 +2110,7 @@ class UIRoot extends Component {
                   history={this.props.history}
                   mediaSearchStore={this.props.mediaSearchStore}
                   muted={this.state.muted}
+                  megaphone={this.state.megaphone}
                   frozen={this.state.frozen}
                   watching={this.state.watching}
                   onWatchEnded={() => this.setState({ watching: false })}
@@ -2111,6 +2121,7 @@ class UIRoot extends Component {
                   isCursorHoldingPen={this.props.isCursorHoldingPen}
                   hasActiveCamera={this.props.hasActiveCamera}
                   onToggleMute={this.toggleMute}
+                  onToggleMegaphone={this.toggleMegaphone}
                   onSpawnPen={this.spawnPen}
                   onSpawnCamera={() => this.props.scene.emit("action_toggle_camera")}
                   onShareVideo={this.shareVideo}
