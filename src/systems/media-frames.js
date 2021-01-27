@@ -25,11 +25,14 @@ const isCapturableByType = {
   },
   [MediaType.PDF]: function(el) {
     return !!(el && el.components["media-pdf"]);
+  },
+  [MediaType.NONE]: function(el) {
+    return false;
   }
 };
 
-const EMPTY_COLOR = 0x6fc0fd;
-const HOVER_COLOR = 0x2f80ed;
+const EMPTY_COLOR = 0x00FF00;
+const HOVER_COLOR = 0x008F00;
 const FULL_COLOR = 0x808080;
 
 const components = [];
@@ -113,6 +116,7 @@ export class MediaFramesSystem {
   }
 
   isColliding(entityA, entityB) {
+    console.log("media-frame isColliding");
     const bodyAUUID = entityA.components["body-helper"].uuid;
     const bodyBUUID = entityB.components["body-helper"].uuid;
     return (
@@ -136,6 +140,13 @@ AFRAME.registerComponent("media-frame", {
 
   init() {
     //TODO these visuals need work
+    if(this.el.className.startsWith('Trigger'))
+    {
+      console.log("media-frames physicsSystem", this.physicsSystem);
+      
+      this.el.setAttribute("trigger", false);
+    }
+
     this.el.setObject3D(
       "guide",
       new THREE.Mesh(

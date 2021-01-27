@@ -17,7 +17,8 @@ export const MediaType = {
   MODEL: "model",
   IMAGE: "image",
   VIDEO: "video",
-  PDF: "pdf"
+  PDF: "pdf",
+  NONE: "none"
 };
 
 const linkify = Linkify();

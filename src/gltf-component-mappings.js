@@ -411,4 +411,5 @@ AFRAME.GLTFModelPlus.registerComponent("audio-settings", "audio-settings", (el, 
 
 AFRAME.GLTFModelPlus.registerComponent("ill-interactions", "ill-interactions");
 AFRAME.GLTFModelPlus.registerComponent("megaphone", "megaphone");
+AFRAME.GLTFModelPlus.registerComponent("trigger", "trigger");
 AFRAME.GLTFModelPlus.registerComponent("group-id", "group-id");
