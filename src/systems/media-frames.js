@@ -27,7 +27,7 @@ const isCapturableByType = {
     return !!(el && el.components["media-pdf"]);
   },
   [MediaType.NONE]: function(el) {
-    return false;
+    return true;
   }
 };
 
@@ -59,6 +59,11 @@ export class MediaFramesSystem {
 
       if (frame.data.targetId === "empty") {
         // frame empty
+        if(frame.data.mediaType == MediaType.NONE)
+        {
+          return;
+        }
+
         guideMesh.material.uniforms.color.value.set(EMPTY_COLOR);
         const capturableEl = this.getCapturableEntityCollidingWithBody(frame.data.mediaType, bodyUUID);
         if (capturableEl && NAF.utils.isMine(capturableEl)) {

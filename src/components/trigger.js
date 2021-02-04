@@ -71,6 +71,8 @@ AFRAME.registerComponent('trigger', {
       },
       onTriggerEnter: function(element)
       {
+        console.log("trigger",element);
+
         switch(this.action)
         {
           case "teleport":
@@ -83,6 +85,8 @@ AFRAME.registerComponent('trigger', {
       },
       onTriggerLeft: function(element)
       {
+        console.log("trigger",element);
+
         switch(this.action)
         {
           case "teleport":
@@ -99,11 +103,10 @@ AFRAME.registerComponent('trigger', {
         element.object3D.position.copy(position.object3D.position);
         element.object3D.rotation.copy(position.object3D.rotation);
         element.object3D.matrixNeedsUpdate = true;
-        element.components["floaty-object"].setLocked(true); 
+        //element.components["floaty-object"].setLocked(true); 
       },
       changeVisibility: function(element, isVisible)
       {
-        console.log("trigger changeVisibility", element);
         element.setAttribute("visible", isVisible);
       },
       isColliding: function(entityA, entityB) {

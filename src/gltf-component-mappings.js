@@ -349,23 +349,23 @@ AFRAME.GLTFModelPlus.registerComponent(
       leaveProperty,
       leaveValue
     } = componentData;
-
+    
     let enterComponentMapping, leaveComponentMapping, targetEntity;
-
+    
     try {
       enterComponentMapping = getSanitizedComponentMapping(enterComponent, enterProperty, publicComponents);
       leaveComponentMapping = getSanitizedComponentMapping(leaveComponent, leaveProperty, publicComponents);
-
+      
+      //targetEntity = indexToEntityMap[target];
       targetEntity = indexToEntityMap[target];
-
+      
       if (!targetEntity) {
         throw new Error(`Couldn't find target entity with index: ${target}.`);
       }
     } catch (e) {
       console.warn(`Error inflating gltf component "trigger-volume": ${e.message}`);
       return;
-    }
-
+    }   
     // Filter out scope and colliders properties.
     el.setAttribute("trigger-volume", {
       colliders: "#avatar-pov-node",

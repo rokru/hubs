@@ -197,7 +197,7 @@
                                 avatar-audio-source="rolloffFactor: 2.0;"
                                 personal-space-invader="radius: 0.15; useMaterial: true;"
                                 bone-visibility
-                                body-helper="type: kinematic; collisionFilterGroup: 4; collisionFilterMask: 1;"
+                                body-helper="type: kinematic; collisionFilterGroup: 4; collisionFilterMask: 17;"
                                 shape-helper="type: cylinder; fit: manual; halfExtents: 0.11 0.10 0.11; offset: 0 0.06 0.04;"
                             ></a-entity>
                         </template>
@@ -523,7 +523,7 @@
                     and so must be configured when creating the entity on each client. Since we only support media frames in scenes
                     for now, this is acceptable, but TODO this will need to be handled if we want to dynamically spawn them.
                 -->
-                <a-entity body-helper="type: kinematic; collisionFilterGroup: 16; collisionFilterMask: 1; disableCollision: true;" >
+                <a-entity body-helper="type: kinematic; collisionFilterGroup: 16; collisionFilterMask: 31; disableCollision: true;" >
                 </a-entity>
             </template>
 
@@ -1446,7 +1446,14 @@
                     </a-entity>
                 </template>
                 <template data-name="Head">
-                    <a-entity id="avatar-head" visible="false" bone-visibility="updateWhileInvisible: true;"></a-entity>
+                    <a-entity 
+                    id="avatar-head" 
+                    visible="false" 
+                    bone-visibility="updateWhileInvisible: true;" 
+                    body-helper="type: kinematic; collisionFilterGroup: 4; collisionFilterMask: 17;"
+                    shape-helper="type: cylinder; fit: manual; halfExtents: 0.11 0.10 0.11; offset: 0 0.06 0.04;"
+                           
+                    ></a-entity>
                 </template>
 
                 <template data-name="LeftHand">
