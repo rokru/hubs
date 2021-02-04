@@ -1,3 +1,11 @@
+export const ACTIONS ={
+  MEGAPHONE: "megaphone",
+  TELEPORT: "teleport",
+  VISIBLE: "visible",
+};
+
+
+
 AFRAME.registerComponent('trigger', {
   schema: {
     avatar: { default: null },
@@ -9,6 +17,16 @@ AFRAME.registerComponent('trigger', {
 
       },
       init: function () {
+        this.initVariables();
+        this.setupCollisionGroup();
+        console.log("trigger action", this.action);
+      },  
+      tick: function()
+      {
+        this.CheckCollidingObjects();
+      },
+      initVariables: function()
+      {
         this.avatar = document.querySelector("#avatar-rig");
         this.physicsSystem = this.el.sceneEl.systems["hubs-systems"].physicsSystem;
         this.uuid = this.el.components["body-helper"].uuid;
@@ -16,17 +34,28 @@ AFRAME.registerComponent('trigger', {
         this.action = this.el.className.split("-")[1];
         this.elementsInTrigger = [];
         this.el.setAttribute("media-frame", {mediaType:"none"});
-
-        console.log("trigger action", this.action);
-
-
-      },  
-      tick: function()
+      },
+      setupCollisionGroup: function()
       {
-        this.CheckCollidingObjects();
-      },      
+        let collisionMask = 0;
+
+          switch(this.action)
+          {
+            case ACTIONS.TELEPORT:
+              collisionMask = 1;
+              break;
+            case ACTIONS.VISIBLE:
+              collisionMask = 1;
+              break;
+            case ACTIONS.MEGAPHONE:
+              collisionMask = 4;
+              break;
+          }
+
+        this.el.setAttribute("body-helper", {collisionFilterMask:collisionMask})
+      } ,     
       CheckCollidingObjects: function() {
-        const collisions = this.physicsSystem.getCollisions(this.uuid);
+        let collisions = this.physicsSystem.getCollisions(this.uuid);
 
         for (let i = 0; i < collisions.length; i++) {
           const bodyData = this.physicsSystem.bodyUuidToData.get(collisions[i]);
@@ -54,8 +83,9 @@ AFRAME.registerComponent('trigger', {
             const bodyData = this.physicsSystem.bodyUuidToData.get(collisions[i]);
             const mediaObjectEl = bodyData && bodyData.object3D && bodyData.object3D.el;
 
-            if(mediaObjectEl == element)
+            if(mediaObjectEl.id == element.id)
             {
+
               elementFound = true;
               break;
             }
@@ -71,39 +101,50 @@ AFRAME.registerComponent('trigger', {
       },
       onTriggerEnter: function(element)
       {
-        console.log("trigger",element);
+        console.log("trigger enter",element);
 
         switch(this.action)
         {
-          case "teleport":
+          case ACTIONS.TELEPORT:
             this.teleportElement(element, this.params[2]);
             break;
-          case "visible":
+          case ACTIONS.VISIBLE:
             this.changeVisibility(element, false);
+            break;
+          case ACTIONS.MEGAPHONE:
+            this.changeMegaphone(true);
             break;
         }
       },
       onTriggerLeft: function(element)
       {
-        console.log("trigger",element);
+        console.log("trigger left",element);
 
         switch(this.action)
         {
-          case "teleport":
-            //this.teleportElement(element, this.params[2]);
+          case ACTIONS.TELEPORT:
             break;
-          case "visible":
-            this.changeVisibility(element, true);
+          case ACTIONS.VISIBLE:
+              this.changeVisibility(element, true);
+            break;
+          case ACTIONS.MEGAPHONE:
+            this.changeMegaphone(false);
             break;
         }
       },
+      changeMegaphone: function(isActivated)
+      {
+          this.avatar.setAttribute("isMegaphone",isActivated);
+      },
       teleportElement: function(element, targetClassName)
       {
+        console.log("trigger teleportElement", targetClassName);
+
         const position = document.querySelector("."+targetClassName);
         element.object3D.position.copy(position.object3D.position);
         element.object3D.rotation.copy(position.object3D.rotation);
         element.object3D.matrixNeedsUpdate = true;
-        //element.components["floaty-object"].setLocked(true); 
+        element.components["floaty-object"].setLocked(true); 
       },
       changeVisibility: function(element, isVisible)
       {
