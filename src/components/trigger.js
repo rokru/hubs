@@ -2,6 +2,7 @@ export const ACTIONS ={
   MEGAPHONE: "megaphone",
   TELEPORT: "teleport",
   VISIBLE: "visible",
+  SWITCH: "switch",
 };
 
 
@@ -50,7 +51,10 @@ AFRAME.registerComponent('trigger', {
             case ACTIONS.MEGAPHONE:
               collisionMask = 4;
               break;
-          }
+            case ACTIONS.SWITCH	:
+              collisionMask = 5;
+              break; 
+            }
 
         this.el.setAttribute("body-helper", {collisionFilterMask:collisionMask})
       } ,     
@@ -93,9 +97,9 @@ AFRAME.registerComponent('trigger', {
 
           if(!elementFound)
           {
-            this.elementsInTrigger.splice(i,1);
-
             this.onTriggerLeft(element);
+            
+            this.elementsInTrigger.splice(i,1);
           }
         }
       },
@@ -114,6 +118,9 @@ AFRAME.registerComponent('trigger', {
           case ACTIONS.MEGAPHONE:
             this.changeMegaphone(true);
             break;
+          case ACTIONS.SWITCH:
+            this.switchVisibility(this.params[3]=='true');
+            break;
         }
       },
       onTriggerLeft: function(element)
@@ -130,6 +137,21 @@ AFRAME.registerComponent('trigger', {
           case ACTIONS.MEGAPHONE:
             this.changeMegaphone(false);
             break;
+          case ACTIONS.SWITCH:
+            if(this.elementsInTrigger.length<=1)
+            {
+              this.switchVisibility(!this.params[3]=='true');
+            }
+            break;
+        }
+      },
+      switchVisibility: function(isVisible)
+      {
+        let target = document.querySelector("."+this.params[2]);
+        
+        if(target)
+        {
+          target.setAttribute("visible", isVisible);
         }
       },
       changeMegaphone: function(isActivated)
