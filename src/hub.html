@@ -1432,7 +1432,9 @@
                         hand-pose__right
                         hand-pose-controller__left="networkedAvatar:#avatar-rig;eventSrc:#player-left-controller"
                         hand-pose-controller__right="networkedAvatar:#avatar-rig;eventSrc:#player-right-controller"
-                    ></a-entity>
+                        body-helper="type: kinematic; collisionFilterGroup: 4; collisionFilterMask: 17;"
+                        shape-helper="type: cylinder; fit: manual; halfExtents: 0.11 0.10 0.11; offset: 0 0.06 0.04;"
+                              ></a-entity>
                 </template>
 
                 <template data-name="Neck">
@@ -1449,10 +1451,7 @@
                     <a-entity 
                     id="avatar-head" 
                     visible="false" 
-                    bone-visibility="updateWhileInvisible: true;" 
-                    body-helper="type: kinematic; collisionFilterGroup: 4; collisionFilterMask: 17;"
-                    shape-helper="type: cylinder; fit: manual; halfExtents: 0.11 0.10 0.11; offset: 0 0.06 0.04;"
-                           
+                    bone-visibility="updateWhileInvisible: true;"  
                     ></a-entity>
                 </template>
 
