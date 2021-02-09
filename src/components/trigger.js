@@ -20,11 +20,27 @@ AFRAME.registerComponent('trigger', {
       init: function () {
         this.initVariables();
         this.setupCollisionGroup();
+        this.initState();
         console.log("trigger action", this.action);
       },  
       tick: function()
       {
         this.CheckCollidingObjects();
+      },
+      initState: function()
+      {
+        switch(this.action)
+        {
+          case ACTIONS.TELEPORT:
+            break;
+          case ACTIONS.VISIBLE:
+            break;
+          case ACTIONS.MEGAPHONE:
+            break;
+          case ACTIONS.SWITCH	:
+            this.switchVisibility(!this.params[3]=='true');
+            break; 
+          }
       },
       initVariables: function()
       {
