@@ -59,7 +59,7 @@ AFRAME.registerComponent('trigger', {
           switch(this.action)
           {
             case ACTIONS.TELEPORT:
-              collisionMask = 1;
+              collisionMask = 5;
               break;
             case ACTIONS.VISIBLE:
               collisionMask = 1;
