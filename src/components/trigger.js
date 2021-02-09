@@ -38,7 +38,7 @@ AFRAME.registerComponent('trigger', {
           case ACTIONS.MEGAPHONE:
             break;
           case ACTIONS.SWITCH	:
-            this.switchVisibility(!this.params[3]=='true');
+            this.switchVisibility(!(this.params[3]=='true'));
             break; 
           }
       },
@@ -46,6 +46,7 @@ AFRAME.registerComponent('trigger', {
       {
         this.avatar = document.querySelector("#avatar-rig");
         this.physicsSystem = this.el.sceneEl.systems["hubs-systems"].physicsSystem;
+        //this.interactionSystem = this.el.sceneEl.systems["hubs-systems"].el.systems.interaction;
         this.uuid = this.el.components["body-helper"].uuid;
         this.params = this.el.className.split("-");
         this.action = this.el.className.split("-")[1];
@@ -156,7 +157,7 @@ AFRAME.registerComponent('trigger', {
           case ACTIONS.SWITCH:
             if(this.elementsInTrigger.length<=1)
             {
-              this.switchVisibility(!this.params[3]=='true');
+              this.switchVisibility(!(this.params[3]=='true'));
             }
             break;
         }
@@ -176,13 +177,20 @@ AFRAME.registerComponent('trigger', {
       },
       teleportElement: function(element, targetClassName)
       {
-        console.log("trigger teleportElement", targetClassName);
+        if(element.className=="AvatarRoot")
+        {
+          element = this.avatar;
+        }
 
         const position = document.querySelector("."+targetClassName);
         element.object3D.position.copy(position.object3D.position);
         element.object3D.rotation.copy(position.object3D.rotation);
         element.object3D.matrixNeedsUpdate = true;
-        element.components["floaty-object"].setLocked(true); 
+
+        if(element.components["floaty-object"])
+        {
+          element.components["floaty-object"].setLocked(true); 
+        }
       },
       changeVisibility: function(element, isVisible)
       {
