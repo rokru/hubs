@@ -1,3 +1,5 @@
+import { NearestFilter } from "three";
+
 export const ACTIONS ={
   MEGAPHONE: "megaphone",
   TELEPORT: "teleport",
@@ -177,7 +179,12 @@ AFRAME.registerComponent('trigger', {
       },
       teleportElement: function(element, targetClassName)
       {
-        if(element.className=="AvatarRoot")
+        if(!NAF.utils.isMine(element))
+        {
+            return;
+        }
+
+        if(element.className=="AvatarRoot" || element.className=="Head")
         {
           element = this.avatar;
         }
