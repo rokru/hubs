@@ -4,7 +4,8 @@ export const ACTIONS ={
   MEGAPHONE: "megaphone",
   TELEPORT: "teleport",
   VISIBLE: "visible",
-  SWITCH: "switch",
+  SWITCH: "switch",  
+  SNAP: "snap",
 };
 
 
@@ -15,7 +16,7 @@ AFRAME.registerComponent('trigger', {
     physicsSystem: { default: null },
     uuid: { default: 0 },
     params: { default: "" },
-    action: { default: "" },
+    action: { default: "test" },
     elementsInTrigger: { default: []},
 
       },
@@ -27,7 +28,14 @@ AFRAME.registerComponent('trigger', {
       },  
       tick: function()
       {
-        this.CheckCollidingObjects();
+        try
+        {
+          this.CheckCollidingObjects();
+        }
+        catch(e)
+        {
+          console.error(e);
+        }
       },
       initState: function()
       {
@@ -42,6 +50,8 @@ AFRAME.registerComponent('trigger', {
           case ACTIONS.SWITCH	:
             this.switchVisibility(!(this.params[3]=='true'));
             break; 
+          case ACTIONS.SWITCH	:
+            break; 
           }
       },
       initVariables: function()
@@ -51,7 +61,7 @@ AFRAME.registerComponent('trigger', {
         //this.interactionSystem = this.el.sceneEl.systems["hubs-systems"].el.systems.interaction;
         this.uuid = this.el.components["body-helper"].uuid;
         this.params = this.el.className.split("-");
-        this.action = this.el.className.split("-")[1];
+        this.action = this.params[1];
         this.elementsInTrigger = [];
         this.el.setAttribute("media-frame", {mediaType:"none"});
       },
@@ -72,6 +82,9 @@ AFRAME.registerComponent('trigger', {
               break;
             case ACTIONS.SWITCH	:
               collisionMask = 5;
+              break; 
+            case ACTIONS.SNAP	:
+              collisionMask = 1;
               break; 
             }
 
@@ -140,6 +153,9 @@ AFRAME.registerComponent('trigger', {
           case ACTIONS.SWITCH:
             this.switchVisibility(this.params[3]=='true');
             break;
+          case ACTIONS.SNAP:
+            this.snap(element);
+            break;
         }
       },
       onTriggerLeft: function(element)
@@ -161,6 +177,8 @@ AFRAME.registerComponent('trigger', {
             {
               this.switchVisibility(!(this.params[3]=='true'));
             }
+            break;
+          case ACTIONS.SNAP:
             break;
         }
       },
@@ -202,6 +220,17 @@ AFRAME.registerComponent('trigger', {
       changeVisibility: function(element, isVisible)
       {
         element.setAttribute("visible", isVisible);
+      },
+      snap: function(element)
+      {
+        console.log("trigger snap", element);
+        if(element.components["floaty-object"])
+        {
+          element.components["floaty-object"].setLocked(true); 
+        }
+        
+        element.object3D.rotation.copy(this.el.object3D.rotation);
+        element.object3D.matrixNeedsUpdate = true;        
       },
       isColliding: function(entityA, entityB) {
         console.log("media-frame isColliding");

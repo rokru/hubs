@@ -4,14 +4,18 @@ import { handleExitTo2DInterstitial } from "../utils/vr-interstitial";
 
 AFRAME.registerComponent("open-media-button", {
   schema: {
-    onlyOpenLink: { type: "boolean" }
+    onlyOpenLink: { type: "boolean" }, 
+    customLink: {default: "" }, 
+    
   },
   init() {
     this.label = this.el.querySelector("[text]");
 
+    
     this.updateSrc = async () => {
       if (!this.targetEl.parentNode) return; // If removed
       const src = (this.src = this.targetEl.components["media-loader"].data.src);
+      this.data.customLink = this.src;
       const visible = src && guessContentType(src) !== "video/vnd.hubs-webrtc";
       const mayChangeScene = this.el.sceneEl.systems.permissions.canOrWillIfCreator("update_hub");
 
@@ -44,7 +48,8 @@ AFRAME.registerComponent("open-media-button", {
 
       if (this.data.onlyOpenLink) {
         await exitImmersive();
-        window.open(this.src);
+        this.data.customLink = this.targetEl.getAttribute("customLink");
+        window.open(this.data.customLink != "" ? this.data.customLink: this.src);
       } else if (await isLocalHubsAvatarUrl(this.src)) {
         const avatarId = new URL(this.src).pathname.split("/").pop();
         window.APP.store.update({ profile: { avatarId } });

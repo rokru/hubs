@@ -24,7 +24,9 @@ class InWorldChatBox extends Component {
     enableSpawning: PropTypes.bool
   };
 
-  state = {
+  static inputMessage = "";
+
+ state = {
     pendingMessage: ""
   };
 
@@ -43,7 +45,7 @@ class InWorldChatBox extends Component {
     const discordSnippet = this.props.discordBridges.map(ch => "#" + ch).join(", ");
 
     return (
-      <form onSubmit={this.sendMessage}>
+      <form onSubmit={this.sendMessage} id="chat-input-form">
         <div
           className={classNames({ [styles.messageEntryInRoom]: true, [styles.messageEntryOnMobile]: isMobile })}
           style={{ height: pendingMessageFieldHeight }}
@@ -87,6 +89,7 @@ class InWorldChatBox extends Component {
               styles.messageEntryInput,
               styles.messageEntryInputInRoom,
               "chat-focus-target",
+              "chat-input",
               !this.props.enableSpawning && styles.messageEntryInputNoSpawn
             ])}
             value={this.state.pendingMessage}
@@ -100,6 +103,7 @@ class InWorldChatBox extends Component {
             onChange={e => {
               e.stopPropagation();
               this.setState({ pendingMessage: e.target.value });
+              InWorldChatBox.inputMessage = e.target.value;
             }}
             onKeyDown={e => {
               if (e.key === "Enter" && !e.ctrlKey && !e.shiftKey) {
