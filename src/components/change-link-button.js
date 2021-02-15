@@ -21,11 +21,30 @@ AFRAME.registerComponent("change-link-button", {
     });
 
     this.onClick = () => {
+      
       this.targetEl.setAttribute("customLink", InWorldChatBox.inputMessage);
+      
+      if(InWorldChatBox.inputMessage)
+      {
+        console.log("change link button click withMessage");
+        this.targetEl.setAttribute("hover-menu__link", { template: "#link-hover-menu", isFlat: true });
+      }
+      else
+      {
+        console.log("change link button click noMessage");
+        this.targetEl.setAttribute("hover-menu", { template: "#empty-hover-menu"});
+      }
+      
+      
+      
+      
       InWorldChatBox.inputMessage = "";
     };
   },
-  
+  tick: function()
+  {
+
+  }, 
 
   play() {
     this.el.object3D.addEventListener("interact", this.onClick);

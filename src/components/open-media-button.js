@@ -42,13 +42,14 @@ AFRAME.registerComponent("open-media-button", {
     };
 
     this.onClick = async () => {
+      this.data.customLink = this.targetEl.getAttribute("customLink");
+
       const mayChangeScene = this.el.sceneEl.systems.permissions.canOrWillIfCreator("update_hub");
 
       const exitImmersive = async () => await handleExitTo2DInterstitial(false, () => {}, true);
 
       if (this.data.onlyOpenLink) {
         await exitImmersive();
-        this.data.customLink = this.targetEl.getAttribute("customLink");
         window.open(this.data.customLink != "" ? this.data.customLink: this.src);
       } else if (await isLocalHubsAvatarUrl(this.src)) {
         const avatarId = new URL(this.src).pathname.split("/").pop();
@@ -61,7 +62,7 @@ AFRAME.registerComponent("open-media-button", {
         location.href = this.src;
       } else {
         await exitImmersive();
-        window.open(this.src);
+        window.open(this.data.customLink != "" ? this.data.customLink: this.src);
       }
     };
 
