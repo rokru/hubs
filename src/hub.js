@@ -176,7 +176,7 @@ const store = window.APP.store;
 store.update({ preferences: { shouldPromptForRefresh: undefined } }); // Clear flag that prompts for refresh from preference screen
 const mediaSearchStore = window.APP.mediaSearchStore;
 const OAUTH_FLOW_PERMS_TOKEN_KEY = "ret-oauth-flow-perms-token";
-const NOISY_OCCUPANT_COUNT = 12; // Above this # of occupants, we stop posting join/leaves/renames
+const NOISY_OCCUPANT_COUNT = 30; // Above this # of occupants, we stop posting join/leaves/renames
 
 const qs = new URLSearchParams(location.search);
 const isMobile = AFRAME.utils.device.isMobile();
@@ -450,6 +450,10 @@ async function updateEnvironmentForHub(hub, entryManager) {
         );
 
         sceneEl.emit("leaving_loading_environment");
+        if (environmentEl.components["gltf-model-plus"].data.src === sceneUrl) {
+          console.warn("Updating environment to the same url.");
+          environmentEl.setAttribute("gltf-model-plus", { src: "" });
+        }
         environmentEl.setAttribute("gltf-model-plus", { src: sceneUrl });
       },
       { once: true }
@@ -459,6 +463,10 @@ async function updateEnvironmentForHub(hub, entryManager) {
       environmentEl.addEventListener("model-error", sceneErrorHandler, { once: true });
     }
 
+    if (environmentEl.components["gltf-model-plus"].data.src === loadingEnvironment) {
+      console.warn("Transitioning to loading environment but was already in loading environment.");
+      environmentEl.setAttribute("gltf-model-plus", { src: "" });
+    }
     environmentEl.setAttribute("gltf-model-plus", { src: loadingEnvironment });
   }
 }
@@ -1562,7 +1570,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.APP.hub = hub;
     updateUIForHub(hub, hubChannel);
 
-    if (stale_fields.includes("scene")) {
+    if (
+      stale_fields.includes("scene") ||
+      stale_fields.includes("scene_listing") ||
+      stale_fields.includes("default_environment_gltf_bundle_url")
+    ) {
       const fader = document.getElementById("viewing-camera").components["fader"];
 
       fader.fadeOut().then(() => {
