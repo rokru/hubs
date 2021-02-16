@@ -7,6 +7,7 @@ AFRAME.registerComponent('custom-link', {
       },
       set: function(newLink)
       {
+        console.log("custom-link set newLink", newLink);
         this.data.link = newLink;
         this.updateUI();
       },
@@ -22,13 +23,17 @@ AFRAME.registerComponent('custom-link', {
       },
       updateUI: function()
       {
-        if(this.data.link)
+        if(this.data.link != "")    
       {
-        this.el.setAttribute("hover-menu__link", { template: "#link-hover-menu", isFlat: true });
+        this.el.setAttribute("hover-menu__link", { template: "#link-hover-menu"});
       }
       else
       {
-        this.el.setAttribute("hover-menu", { template: "#empty-hover-menu"});
+        //disable hover menu
       } 
-      }
+      },
+      update() {
+        console.log("custom-link update link", this.data.link);
+        this.updateUI();
+      },
   });

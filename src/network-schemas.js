@@ -87,8 +87,15 @@ function registerNetworkSchemas() {
   NAF.schemas.add({
     template: "#interactable-media",
     components: [
+      // TODO: Optimize checking mediaOptions with requiresNetworkUpdate.
+      "media-loader",
       'visible',
       'group-id',
+      "pinnable",
+      {
+        component: "custom-link",
+        property: "link"
+      },
       {
         component: "position",
         requiresNetworkUpdate: vectorRequiresUpdate(0.001)
@@ -101,8 +108,6 @@ function registerNetworkSchemas() {
         component: "scale",
         requiresNetworkUpdate: vectorRequiresUpdate(0.001)
       },
-      // TODO: Optimize checking mediaOptions with requiresNetworkUpdate.
-      "media-loader",
       {
         component: "media-video",
         property: "time"
@@ -115,7 +120,6 @@ function registerNetworkSchemas() {
         component: "media-pdf",
         property: "index"
       },
-      "pinnable"
     ],
     nonAuthorizedComponents: [
       {
