@@ -116,7 +116,6 @@ export class MediaFramesSystem {
   }
 
   isColliding(entityA, entityB) {
-    console.log("media-frame isColliding");
     const bodyAUUID = entityA.components["body-helper"].uuid;
     const bodyBUUID = entityB.components["body-helper"].uuid;
     return (
@@ -141,9 +140,7 @@ AFRAME.registerComponent("media-frame", {
   init() {
     //TODO these visuals need work
     if(this.el.className.startsWith('Trigger'))
-    {
-      console.log("media-frames physicsSystem", this.physicsSystem);
-      
+    {     
       this.el.setAttribute("trigger", false);
     }
 

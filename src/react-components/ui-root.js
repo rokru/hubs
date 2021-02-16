@@ -455,7 +455,6 @@ class UIRoot extends Component {
 
   // TODO: we need to come up with a cleaner way to handle the shared state between aframe and react than emmitting events and setting state on the scene
   onAframeStateChanged = e => {
-    console.log("onAframeStateChanged", e.detail);
     if (!(e.detail === "muted" || e.detail === "frozen" || e.detail === "megaphone" )) return;
     this.setState({
       [e.detail]: this.props.scene.is(e.detail)

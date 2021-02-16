@@ -2,6 +2,7 @@ export default function pinnedEntityToGltf(el) {
   if (!NAF.utils.isMine(el)) return;
 
   // Construct a GLTF node from this entity
+
   const object3D = el.object3D;
   const components = el.components;
   const networkId = components.networked.data.networkId;
@@ -23,6 +24,7 @@ export default function pinnedEntityToGltf(el) {
 
   if (components["media-loader"]) {
     const mediaSrc = components["media-loader"].data.src;
+    const customLink = components["custom-link"].data.link;
     const mediaVersion = components["media-loader"].data.version;
     const mediaContentSubtype = components["media-loader"].data.contentSubtype;
 
@@ -31,7 +33,7 @@ export default function pinnedEntityToGltf(el) {
       return null;
     }
 
-    gltfComponents.media = { src: mediaSrc, version: mediaVersion, contentSubtype: mediaContentSubtype, id: networkId };
+    gltfComponents.media = { src: mediaSrc, customLink: customLink, version: mediaVersion, contentSubtype: mediaContentSubtype, id: networkId };
 
     if (components["media-pdf"]) {
       gltfComponents.media.pageIndex = components["media-pdf"].data.index;

@@ -9,7 +9,6 @@ AFRAME.registerComponent('megaphone', {
         //this.data.avatarAudioSource = this.el.getAttribute("avatar-audio-source");
         this.isActive = this.el.getAttribute("isMegaphone")=="true";
         this.avatarAudioSource = this.el.components['avatar-audio-source'];
-        console.log("megaphone avatarAudioSource", this.avatarAudioSource);
         
         if(this.el.id == "avatar-rig")
         {
@@ -27,9 +26,7 @@ AFRAME.registerComponent('megaphone', {
       this.isActive = isMegaphoneActive;
             
       if(this.isActive==true)
-      {
-        console.log("activate megaphone");
-                
+      {               
         this.el.setAttribute("avatar-audio-source", {
           positional: true,
           distanceModel: "inverse",
@@ -42,9 +39,7 @@ AFRAME.registerComponent('megaphone', {
         this.avatarAudioSource.createAudio();
       }
       else
-      {
-        console.log("deactivate megaphone");
-        
+      {       
         this.el.setAttribute("avatar-audio-source", {
           positional: true,
           distanceModel: "inverse",
@@ -56,14 +51,9 @@ AFRAME.registerComponent('megaphone', {
         this.avatarAudioSource.destroyAudio();
         this.avatarAudioSource.createAudio();
       }
-      
-      console.log("megaphone isMegaphoneActive", isMegaphoneActive);
-      console.log("megaphone this.isActive", this.isActive);
-      console.log("megaphone avatarAudioSource", this.avatarAudioSource);
     },
     block: function(){
         this.isLocked = true;
-        console.log("megaphone block");
       },
       tick: function()
       {
@@ -74,7 +64,6 @@ AFRAME.registerComponent('megaphone', {
         }
         else
         {
-        //console.log("megaphone element", this.el);
         this.set(this.el.getAttribute("isMegaphone")=="true");
       }
     },

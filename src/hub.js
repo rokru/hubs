@@ -211,6 +211,8 @@ import "./components/shape-helper";
 import "./components/ill-interactions";
 import "./components/trigger";
 import "./components/megaphone";
+import "./components/change-link-button";
+import "./components/custom-link";
 import "./components/timer-component";
 
 import registerNetworkSchemas from "./network-schemas";

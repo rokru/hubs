@@ -231,6 +231,7 @@ export default class SceneEntryManager {
     }
 
     const gltfNode = pinnedEntityToGltf(el);
+
     if (!gltfNode) return;
     el.setAttribute("networked", { persistent: true });
     el.setAttribute("media-loader", { fileIsOwned: true });
@@ -322,12 +323,9 @@ export default class SceneEntryManager {
     });
 
     this.scene.addEventListener("action_megaphone", e => {
-      console.log("action_megaphone", e.detail);
-
       const avatarHead = this.scene.querySelector("[id='avatar-rig'");
 
       avatarHead.setAttribute("isMegaphone", e.detail);
-
     });
 
     this.scene.addEventListener("create_object", e => {
@@ -440,13 +438,9 @@ export default class SceneEntryManager {
       const files = e.dataTransfer.files;
 
       if (url) {
-        console.log("spawn by url");
-
         spawnMediaInfrontOfPlayer(url, ObjectContentOrigins.URL);
       } else {
         for (const file of files) {
-          console.log("spawn by file");
-
           spawnMediaInfrontOfPlayer(file, ObjectContentOrigins.FILE);
         }
       }

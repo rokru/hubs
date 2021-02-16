@@ -24,7 +24,6 @@ AFRAME.registerComponent('trigger', {
         this.initVariables();
         this.setupCollisionGroup();
         this.initState();
-        console.log("trigger action", this.action);
       },  
       tick: function()
       {
@@ -137,8 +136,6 @@ AFRAME.registerComponent('trigger', {
       },
       onTriggerEnter: function(element)
       {
-        console.log("trigger enter",element);
-
         switch(this.action)
         {
           case ACTIONS.TELEPORT:
@@ -160,8 +157,6 @@ AFRAME.registerComponent('trigger', {
       },
       onTriggerLeft: function(element)
       {
-        console.log("trigger left",element);
-
         switch(this.action)
         {
           case ACTIONS.TELEPORT:
@@ -223,7 +218,6 @@ AFRAME.registerComponent('trigger', {
       },
       snap: function(element)
       {
-        console.log("trigger snap", element);
         if(element.components["floaty-object"])
         {
           element.components["floaty-object"].setLocked(true); 
@@ -233,7 +227,6 @@ AFRAME.registerComponent('trigger', {
         element.object3D.matrixNeedsUpdate = true;        
       },
       isColliding: function(entityA, entityB) {
-        console.log("media-frame isColliding");
         const bodyAUUID = entityA.components["body-helper"].uuid;
         const bodyBUUID = entityB.components["body-helper"].uuid;
         return (

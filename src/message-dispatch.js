@@ -92,8 +92,7 @@ export default class MessageDispatch {
           this.scene.emit("action_mute");
           break;
       case "megaphone":
-        console.log("megaphone", args);
-        
+       
         const avatarHead = this.scene.querySelector("[id='avatar-rig'");
 
         if(args[0]==="on")
@@ -109,7 +108,6 @@ export default class MessageDispatch {
       case "hide-group":          
           const entities = this.scene.querySelectorAll("[group-id='"+args[0]+"']");
           for (let i = 0; i < entities.length; i++) {
-            console.log(entities[i]);
             
             if(!NAF.utils.isMine(entities[i]))  
             {
@@ -122,7 +120,6 @@ export default class MessageDispatch {
       case "show-group":
           const ents = this.scene.querySelectorAll("[group-id='"+args[0]+"']");
           for (let i = 0; i < ents.length; i++) {
-            console.log(ents[i]);
 
             if(!NAF.utils.isMine(ents[i]))  
             {
@@ -156,8 +153,6 @@ export default class MessageDispatch {
         break;
       case "duck":
         spawnChatMessage(getAbsoluteHref(location.href, ducky));
-
-        console.log("location.href", location.href);
 
         if (Math.random() < 0.01) {
           this.scene.systems["hubs-systems"].soundEffectsSystem.playSoundOneShot(SOUND_SPECIAL_QUACK);

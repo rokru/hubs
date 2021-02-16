@@ -156,19 +156,6 @@ export const addMedia = (
   const scene = AFRAME.scenes[0];
 
  const entity = document.createElement("a-entity");
-
-
-  /*if(guessContentType(src.name) === "custom/object")
-  {
-    console.log("custom/object");
-    console.log("src", src);
-    console.log("template", template);
-    console.log("contentOrigin", contentOrigin);
-
-    //entity = document.createElement("a-cylinder-test");
-    entity.setAttribute("custom-attribute", true);
-  }
-*/
   if (networked) {
     entity.setAttribute("networked", { template: template });
 
