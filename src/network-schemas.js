@@ -44,6 +44,10 @@ function registerNetworkSchemas() {
       "megaphone",
       "isMegaphone",
       {
+        component: "audio-channel",
+        property: "channel"
+      },
+      {
         selector: ".camera",
         component: "position",
         requiresNetworkUpdate: vectorRequiresUpdate(0.001)

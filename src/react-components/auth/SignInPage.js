@@ -41,8 +41,11 @@ function useSignIn() {
 
   const submitEmail = useCallback(
     email => {
+      console.log("signinpage submitEmail", email);
+
       auth.signIn(email).then(() => {
-        dispatch({ type: SignInAction.verificationReceived });
+      console.log("signinpage auth.signIn", email);
+      dispatch({ type: SignInAction.verificationReceived });
       });
       dispatch({ type: SignInAction.submitEmail, email });
     },
@@ -66,6 +69,7 @@ function SubmitEmail({ onSubmitEmail, initialEmail }) {
 
   const onSubmitForm = useCallback(
     e => {
+      console.log("signinpage onSubmitForm", e);
       e.preventDefault();
       onSubmitEmail(email);
     },

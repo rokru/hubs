@@ -174,18 +174,25 @@ export async function createAndRedirectToNewHub(name, sceneId, replace) {
   if (sceneId) {
     payload.hub.scene_id = sceneId;
   }
-
+  
   const headers = { "content-type": "application/json" };
   const store = new Store();
   if (store.state && store.state.credentials.token) {
     headers.authorization = `bearer ${store.state.credentials.token}`;
   }
 
+  console.log("phoenix createAndRedirectToNewHub createUrl", createUrl);
+  console.log("phoenix createAndRedirectToNewHub body", JSON.stringify(payload));
+  console.log("phoenix createAndRedirectToNewHub headers", headers);
+  console.log("phoenix createAndRedirectToNewHub headers.authorization", headers.authorization);
+
   let res = await fetch(createUrl, {
     body: JSON.stringify(payload),
     headers,
     method: "POST"
   }).then(r => r.json());
+
+  console.log("phoenix createAndRedirectToNewHub res", res);
 
   if (res.error === "invalid_token") {
     // Clear the invalid token from store.

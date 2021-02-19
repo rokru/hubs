@@ -1,3 +1,4 @@
+import { number } from "prop-types";
 import { NearestFilter } from "three";
 
 export const ACTIONS ={
@@ -6,9 +7,8 @@ export const ACTIONS ={
   VISIBLE: "visible",
   SWITCH: "switch",  
   SNAP: "snap",
+  AUDIOZONE: "audiozone",
 };
-
-
 
 AFRAME.registerComponent('trigger', {
   schema: {
@@ -85,22 +85,23 @@ AFRAME.registerComponent('trigger', {
             case ACTIONS.SNAP	:
               collisionMask = 1;
               break; 
+            case ACTIONS.AUDIOZONE	:
+              collisionMask = 4;
+              break; 
             }
 
         this.el.setAttribute("body-helper", {collisionFilterMask:collisionMask})
       } ,     
       CheckCollidingObjects: function() {
+        
         let collisions = this.physicsSystem.getCollisions(this.uuid);
+        //console.log("trigger this.collisions", collisions.length);
 
         for (let i = 0; i < collisions.length; i++) {
           const bodyData = this.physicsSystem.bodyUuidToData.get(collisions[i]);
           const mediaObjectEl = bodyData && bodyData.object3D && bodyData.object3D.el;
           
-          if(this.listContainsElement(this.elementsInTrigger, mediaObjectEl))
-          {
-
-          }
-          else if(!this.listContainsElement(this.elementsInTrigger, mediaObjectEl))
+          if(!this.listContainsElement(this.elementsInTrigger, mediaObjectEl))
           {
             this.elementsInTrigger.push(mediaObjectEl);
 
@@ -118,9 +119,8 @@ AFRAME.registerComponent('trigger', {
             const bodyData = this.physicsSystem.bodyUuidToData.get(collisions[i]);
             const mediaObjectEl = bodyData && bodyData.object3D && bodyData.object3D.el;
 
-            if(mediaObjectEl.id == element.id)
+            if(mediaObjectEl.object3D.uuid == element.object3D.uuid)
             {
-
               elementFound = true;
               break;
             }
@@ -136,6 +136,7 @@ AFRAME.registerComponent('trigger', {
       },
       onTriggerEnter: function(element)
       {
+        console.log("trigger onTriggerEnter element", element);
         switch(this.action)
         {
           case ACTIONS.TELEPORT:
@@ -150,13 +151,17 @@ AFRAME.registerComponent('trigger', {
           case ACTIONS.SWITCH:
             this.switchVisibility(this.params[3]=='true');
             break;
-          case ACTIONS.SNAP:
-            this.snap(element);
-            break;
+            case ACTIONS.SNAP:
+              this.snap(element);
+              break;          
+            case ACTIONS.AUDIOZONE:
+              this.setAudioZone(element, this.params[2]);
+              break;
         }
       },
       onTriggerLeft: function(element)
       {
+        console.log("trigger onTriggerLeft element", element);
         switch(this.action)
         {
           case ACTIONS.TELEPORT:
@@ -175,7 +180,20 @@ AFRAME.registerComponent('trigger', {
             break;
           case ACTIONS.SNAP:
             break;
+          case ACTIONS.AUDIOZONE:
+            this.setAudioZone(element, 0);
+            break;
         }
+      },
+      setAudioZone: function(element, channelNumber)
+      {
+        console.log("trigger setAudioZone", channelNumber);
+        console.log("trigger isMine", NAF.utils.isMine(element));
+        console.log("trigger audio-channel component", this.avatar.components["audio-channel"]!=null);
+        if(NAF.utils.isMine(element) && this.avatar.components["audio-channel"])
+          {
+            this.avatar.components["audio-channel"].setChannel(channelNumber);
+          }
       },
       switchVisibility: function(isVisible)
       {

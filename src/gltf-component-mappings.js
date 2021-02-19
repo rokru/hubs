@@ -417,8 +417,3 @@ AFRAME.GLTFModelPlus.registerComponent("networked-drawing-buffer", "networked-dr
 AFRAME.GLTFModelPlus.registerComponent("audio-settings", "audio-settings", (el, _componentName, componentData) => {
   el.sceneEl.systems["hubs-systems"].audioSettingsSystem.updateAudioSettings(componentData);
 });
-
-AFRAME.GLTFModelPlus.registerComponent("ill-interactions", "ill-interactions");
-AFRAME.GLTFModelPlus.registerComponent("megaphone", "megaphone");
-AFRAME.GLTFModelPlus.registerComponent("trigger", "trigger");
-AFRAME.GLTFModelPlus.registerComponent("group-id", "group-id");
