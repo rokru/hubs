@@ -95,7 +95,6 @@ AFRAME.registerComponent('trigger', {
       CheckCollidingObjects: function() {
         
         let collisions = this.physicsSystem.getCollisions(this.uuid);
-        //console.log("trigger this.collisions", collisions.length);
 
         for (let i = 0; i < collisions.length; i++) {
           const bodyData = this.physicsSystem.bodyUuidToData.get(collisions[i]);
@@ -136,7 +135,6 @@ AFRAME.registerComponent('trigger', {
       },
       onTriggerEnter: function(element)
       {
-        console.log("trigger onTriggerEnter element", element);
         switch(this.action)
         {
           case ACTIONS.TELEPORT:
@@ -161,7 +159,6 @@ AFRAME.registerComponent('trigger', {
       },
       onTriggerLeft: function(element)
       {
-        console.log("trigger onTriggerLeft element", element);
         switch(this.action)
         {
           case ACTIONS.TELEPORT:
@@ -187,12 +184,13 @@ AFRAME.registerComponent('trigger', {
       },
       setAudioZone: function(element, channelNumber)
       {
-        console.log("trigger setAudioZone", channelNumber);
-        console.log("trigger isMine", NAF.utils.isMine(element));
-        console.log("trigger audio-channel component", this.avatar.components["audio-channel"]!=null);
-        if(NAF.utils.isMine(element) && this.avatar.components["audio-channel"])
+         if(NAF.utils.isMine(element) && this.avatar.components["audio-channel"])
           {
             this.avatar.components["audio-channel"].setChannel(channelNumber);
+          }
+          else
+          {
+            this.avatar.components["audio-channel"].updateChannel();
           }
       },
       switchVisibility: function(isVisible)
