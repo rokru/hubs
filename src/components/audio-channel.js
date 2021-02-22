@@ -5,8 +5,8 @@ AFRAME.registerComponent('audio-channel', {
   schema: {
       avatar: { default: null },
       channel: {type: "number", default: 0},
-        localChannel: {type: "number", default: 0},
-        avatarAudioSource: {type: "asset"},
+      localChannel: {type: "number", default: 0},
+      avatarAudioSource: {type: "asset"},
       },
       init: function () {
         this.avatar = document.querySelector("#avatar-rig");
@@ -20,33 +20,27 @@ AFRAME.registerComponent('audio-channel', {
       {
         if(this.data.localChannel != this.data.channel)
         {
-          console.log("audio-channel tick", this.data.channel);
           this.updateChannel();
         }
       },
       updateChannel: function()
       {
         this.data.localChannel = this.data.channel;
-
+        
         if(NAF.utils.isMine(this.el))
         {
             let audioChannelsEntities = document.querySelectorAll('a-entity[audio-channel]');
-            console.log("audio-channel audioChannels", audioChannelsEntities);
 
             for (let i = 0; i < audioChannelsEntities.length; i++) 
             {
               var audioChannel = audioChannelsEntities[i].components["audio-channel"];
 
-              console.log("audio-channel audioChannel", audioChannel.data.channel);
-
               if(audioChannel.data.channel == this.data.channel)
               {
-                console.log("audio-channel SOUND");
                 audioChannel.setChannelAudio(true);
               }
               else
               {
-                console.log("audio-channel MUTE");
                 audioChannel.setChannelAudio(false);
               }
             }
@@ -58,18 +52,21 @@ AFRAME.registerComponent('audio-channel', {
         {
           return;
         }
-
+        
         if(audioState)
         {
-          console.log("audio-channel setChannelAudio true", this.el);
-
+          this.avatarAudioSource.data.refDistance = 2;
+          this.avatarAudioSource.data.positional = true;
+          this.avatarAudioSource.remove();
+          this.avatarAudioSource.createAudio();
         }
         else
         {
-          console.log("audio-channel setChannelAudio false", this.el);
-
+          this.avatarAudioSource.data.refDistance = 0.0;
+          this.avatarAudioSource.data.positional = true;
+          this.avatarAudioSource.remove();
+          this.avatarAudioSource.createAudio();
         }
-
-      }
+              }
      
   });

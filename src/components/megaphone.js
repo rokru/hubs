@@ -6,7 +6,6 @@ AFRAME.registerComponent('megaphone', {
         avatarAudioSource: {type: "asset"},
       },
       init: function () {
-        //this.data.avatarAudioSource = this.el.getAttribute("avatar-audio-source");
         this.isActive = this.el.getAttribute("isMegaphone")=="true";
         this.avatarAudioSource = this.el.components['avatar-audio-source'];
         
@@ -17,38 +16,28 @@ AFRAME.registerComponent('megaphone', {
       },
 
     set: function(isMegaphoneActive)
-    {      
+    {            
       if(isMegaphoneActive == this.isActive)
       {
         return;
       }
 
+      console.log("megaphone set", isMegaphoneActive);
+
       this.isActive = isMegaphoneActive;
             
       if(this.isActive==true)
       {               
-        this.el.setAttribute("avatar-audio-source", {
-          positional: true,
-          distanceModel: "inverse",
-          maxDistance: 10000,
-          refDistance: 100,
-          rolloffFactor: 2
-        });
-
-        this.avatarAudioSource.destroyAudio();
+        this.avatarAudioSource.data.refDistance = 100;
+        this.avatarAudioSource.data.positional = false;
+        this.avatarAudioSource.remove();
         this.avatarAudioSource.createAudio();
       }
       else
       {       
-        this.el.setAttribute("avatar-audio-source", {
-          positional: true,
-          distanceModel: "inverse",
-          maxDistance: 10000,
-          refDistance: 2,
-          rolloffFactor: 2
-        });
-
-        this.avatarAudioSource.destroyAudio();
+        this.avatarAudioSource.data.refDistance = 2;
+        this.avatarAudioSource.data.positional = true;
+        this.avatarAudioSource.remove();
         this.avatarAudioSource.createAudio();
       }
     },
