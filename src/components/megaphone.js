@@ -32,7 +32,7 @@ AFRAME.registerComponent('megaphone', {
           distanceModel: "inverse",
           maxDistance: 10000,
           refDistance: 100,
-          rolloffFactor: 1
+          rolloffFactor: 2
         });
 
         this.avatarAudioSource.destroyAudio();

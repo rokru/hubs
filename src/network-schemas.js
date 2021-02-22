@@ -41,7 +41,6 @@ function registerNetworkSchemas() {
       },
       "player-info",
       "networked-avatar",
-      "megaphone",
       "isMegaphone",
       {
         component: "audio-channel",
