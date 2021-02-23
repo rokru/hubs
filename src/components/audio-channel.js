@@ -1,5 +1,3 @@
-import { NearestFilter } from "three";
-
 AFRAME.registerComponent('audio-channel', {
   dependencies:['avatar-audio-source'],  
   schema: {

@@ -1,6 +1,3 @@
-import { number } from "prop-types";
-import { NearestFilter } from "three";
-
 export const ACTIONS ={
   MEGAPHONE: "megaphone",
   TELEPORT: "teleport",
