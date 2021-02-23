@@ -42,8 +42,15 @@ AFRAME.registerComponent("open-media-button", {
     };
 
     this.onClick = async () => {
-      this.data.customLink = this.targetEl.components["custom-link"].getLink();
-
+      if(this.targetEl.components["custom-link"])
+      {
+        this.data.customLink = this.targetEl.components["custom-link"].getLink();
+      }
+      else
+      {
+        this.data.customLink = "";
+      }
+      
       const mayChangeScene = this.el.sceneEl.systems.permissions.canOrWillIfCreator("update_hub");
 
       const exitImmersive = async () => await handleExitTo2DInterstitial(false, () => {}, true);
