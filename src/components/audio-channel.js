@@ -5,10 +5,12 @@ AFRAME.registerComponent('audio-channel', {
       channel: {type: "number", default: 0},
       localChannel: {type: "number", default: 0},
       avatarAudioSource: {type: "asset"},
-      },
+      defaultRef: {type: "number", default: 2},
+    },
       init: function () {
         this.avatar = document.querySelector("#avatar-rig");
         this.avatarAudioSource = this.el.components['avatar-audio-source'];
+        this.defaultRef = this.avatarAudioSource.data.refDistance;
       },
       setChannel: function(channelNumber)
       {
@@ -53,18 +55,16 @@ AFRAME.registerComponent('audio-channel', {
         
         if(audioState)
         {
-          this.avatarAudioSource.data.refDistance = 2;
-          this.avatarAudioSource.data.positional = true;
+          this.avatarAudioSource.data.refDistance = this.defaultRef;
           this.avatarAudioSource.remove();
           this.avatarAudioSource.createAudio();
         }
         else
         {
           this.avatarAudioSource.data.refDistance = 0.0;
-          this.avatarAudioSource.data.positional = true;
           this.avatarAudioSource.remove();
           this.avatarAudioSource.createAudio();
         }
-              }
+      }
      
   });

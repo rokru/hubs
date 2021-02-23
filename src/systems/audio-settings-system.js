@@ -97,7 +97,6 @@ export class AudioSettingsSystem {
   }
 
   updateAudioSettings(settings) {
-    console.log("updateAudioSettings", settings);
     this.audioSettings = Object.assign({}, this.defaultSettings, settings);
 
     for (const mediaVideo of this.mediaVideos) {
