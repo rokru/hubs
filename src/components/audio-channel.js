@@ -1,33 +1,47 @@
 AFRAME.registerComponent('audio-channel', {
-  dependencies:['avatar-audio-source'],  
   schema: {
-      avatar: { default: null },
       channel: {type: "number", default: 0},
       localChannel: {type: "number", default: 0},
-      avatarAudioSource: {type: "asset"},
+      avatarAudioSource: {type: "asset", default: null},
       defaultRef: {type: "number", default: 2},
     },
       init: function () {
-        this.avatar = document.querySelector("#avatar-rig");
-        this.avatarAudioSource = this.el.components['avatar-audio-source'];
-        this.defaultRef = this.avatarAudioSource.data.refDistance;
       },
       setChannel: function(channelNumber)
       {
         this.data.channel = channelNumber;
       },
-      tick: function()
+      initVariables: function()
       {
+        try
+        {
+          this.data.avatarAudioSource = this.el.querySelector("[avatar-audio-source]").components['avatar-audio-source'];
+          console.log("megaphone avatarAudioSource Data", this.data.avatarAudioSource.data);
+          this.data.defaultRef = this.data.avatarAudioSource.data.refDistance;
+          console.log("megaphone defaultRef", this.data.defaultRef);
+        }
+        catch(e)
+        {
+          console.error(e);
+        }
+      },
+      tick: function()
+      {   
+        if(this.el.id!="avatar-rig" && this.data.avatarAudioSource == null)
+        {
+          this.initVariables();
+          
+          return;
+        }
+
         if(this.data.localChannel != this.data.channel)
         {
           this.updateChannel();
         }
       },
       updateChannel: function()
-      {
-        this.data.localChannel = this.data.channel;
-        
-        if(NAF.utils.isMine(this.el))
+      {        
+        if(this.el.id=="avatar-rig")
         {
             let audioChannelsEntities = document.querySelectorAll('a-entity[audio-channel]');
 
@@ -48,22 +62,24 @@ AFRAME.registerComponent('audio-channel', {
       },
       setChannelAudio: function(audioState)
       {
-        if(NAF.utils.isMine(this.el))
+        this.data.localChannel = this.data.channel;
+
+        if(this.el.id=="avatar-rig")
         {
           return;
         }
         
         if(audioState)
         {
-          this.avatarAudioSource.data.refDistance = this.defaultRef;
-          this.avatarAudioSource.remove();
-          this.avatarAudioSource.createAudio();
+          this.data.avatarAudioSource.data.refDistance = this.data.defaultRef;
+          this.data.avatarAudioSource.remove();
+          this.data.avatarAudioSource.createAudio();
         }
         else
         {
-          this.avatarAudioSource.data.refDistance = 0.0;
-          this.avatarAudioSource.remove();
-          this.avatarAudioSource.createAudio();
+          this.data.avatarAudioSource.data.refDistance = 0.0;
+          this.data.avatarAudioSource.remove();
+          this.data.avatarAudioSource.createAudio();
         }
       }
      

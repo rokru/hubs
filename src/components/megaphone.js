@@ -1,64 +1,78 @@
 AFRAME.registerComponent('megaphone', {
-  dependencies:['avatar-audio-source'],  
   schema: {
         isActive: {type: "boolean", default: false},
         isLocked: {type: "boolean", default: false},
-        avatarAudioSource: {type: "asset"},
+        avatarAudioSource: {type: "asset", default: null},
         defaultRef: {type: "number", default: 2},
       },
       init: function () {
-        this.isActive = this.el.getAttribute("isMegaphone")=="true";
-        this.avatarAudioSource = this.el.components['avatar-audio-source'];
-        this.defaultRef = this.avatarAudioSource.data.refDistance;
-      console.log("megaphone defaultRef", this.defaultRef);
-        
+        this.data.isActive = this.el.getAttribute("isMegaphone")=="true";
+       
         if(this.el.id == "avatar-rig")
         {
-          this.isLocked = true;
+          this.data.isLocked = true;
         }
       },
 
     set: function(isMegaphoneActive)
-    {            
-      if(isMegaphoneActive == this.isActive)
+    {  
+      if(isMegaphoneActive == this.data.isActive)
       {
         return;
       }
 
-      console.log("megaphone set", isMegaphoneActive);
-      console.log("megaphone defaultRef", this.defaultRef);
-
-      this.isActive = isMegaphoneActive;
-            
-      if(this.isActive==true)
-      {               
-        this.avatarAudioSource.data.refDistance = 100;
-        this.avatarAudioSource.data.positional = false;
-        this.avatarAudioSource.remove();
-        this.avatarAudioSource.createAudio();
-      }
-      else
-      {       
-        this.avatarAudioSource.data.refDistance = this.defaultRef;
-        this.avatarAudioSource.data.positional = true;
-        this.avatarAudioSource.remove();
-        this.avatarAudioSource.createAudio();
-      }
-    },
-    block: function(){
-        this.isLocked = true;
-      },
-      tick: function()
+      if(!this.data.avatarAudioSource)
       {
-        
-        if(this.isLocked)
+        this.initVariables();
+
+        if(!this.data.avatarAudioSource)
         {
           return;
         }
-        else
-        {
-        this.set(this.el.getAttribute("isMegaphone")=="true");
+      }
+
+      this.data.isActive = isMegaphoneActive;
+            
+      if(this.data.isActive==true)
+      {               
+        this.data.avatarAudioSource.data.refDistance = 100;
+        this.data.avatarAudioSource.data.positional = false;
+        this.data.avatarAudioSource.remove();
+        this.data.avatarAudioSource.createAudio();
+      }
+      else
+      {       
+        this.data.avatarAudioSource.data.refDistance = this.data.defaultRef;
+        this.data.avatarAudioSource.data.positional = true;
+        this.data.avatarAudioSource.remove();
+        this.data.avatarAudioSource.createAudio();
       }
     },
-     
+    initVariables: function()
+    {
+      try
+      {
+        this.data.avatarAudioSource = this.el.querySelector("[avatar-audio-source]").components['avatar-audio-source'];
+        console.log("megaphone avatarAudioSource Data", this.data.avatarAudioSource.data);
+        this.data.defaultRef = this.data.avatarAudioSource.data.refDistance;
+        console.log("megaphone defaultRef", this.data.defaultRef);
+      }
+      catch(e)
+      {
+        console.error(e);
+      }
+    },
+    block: function()
+    {
+      this.data.isLocked = true;
+    },
+    tick: function()
+    {
+      if(this.data.isLocked)
+      {
+        return;
+      }
+
+      this.set(this.el.getAttribute("isMegaphone")=="true");
+    },     
   });
