@@ -77,7 +77,6 @@ AFRAME.registerComponent("media-loader", {
       NAF.utils
         .getNetworkedEntity(this.el)
         .then(networkedEl => {
-          console.log("getNetworkedEntity");
 
           this.networkedEl = networkedEl;
         })

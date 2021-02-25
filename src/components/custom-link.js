@@ -33,7 +33,6 @@ AFRAME.registerComponent('custom-link', {
       } 
       },
       update() {
-        console.log("custom-link update link", this.data.link);
         this.updateUI();
       },
   });

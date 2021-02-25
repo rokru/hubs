@@ -16,13 +16,11 @@ AFRAME.registerComponent('audio-channel', {
         try
         {
           this.data.avatarAudioSource = this.el.querySelector("[avatar-audio-source]").components['avatar-audio-source'];
-          console.log("megaphone avatarAudioSource Data", this.data.avatarAudioSource.data);
           this.data.defaultRef = this.data.avatarAudioSource.data.refDistance;
-          console.log("megaphone defaultRef", this.data.defaultRef);
         }
         catch(e)
         {
-          console.error(e);
+          //console.error(e);
         }
       },
       tick: function()

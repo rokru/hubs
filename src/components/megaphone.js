@@ -30,9 +30,7 @@ AFRAME.registerComponent('megaphone', {
           return;
         }
       }
-
-      this.data.isActive = isMegaphoneActive;
-            
+      
       if(this.data.isActive==true)
       {               
         this.data.avatarAudioSource.data.refDistance = 100;
@@ -47,19 +45,19 @@ AFRAME.registerComponent('megaphone', {
         this.data.avatarAudioSource.remove();
         this.data.avatarAudioSource.createAudio();
       }
+
+      this.data.isActive = isMegaphoneActive;
     },
     initVariables: function()
     {
       try
       {
         this.data.avatarAudioSource = this.el.querySelector("[avatar-audio-source]").components['avatar-audio-source'];
-        console.log("megaphone avatarAudioSource Data", this.data.avatarAudioSource.data);
         this.data.defaultRef = this.data.avatarAudioSource.data.refDistance;
-        console.log("megaphone defaultRef", this.data.defaultRef);
       }
       catch(e)
       {
-        console.error(e);
+        //console.error(e);
       }
     },
     block: function()
