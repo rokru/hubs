@@ -30,8 +30,9 @@ AFRAME.registerComponent('megaphone', {
           return;
         }
       }
+
       
-      if(this.data.isActive==true)
+      if(isMegaphoneActive==true)
       {               
         this.data.avatarAudioSource.data.refDistance = 100;
         this.data.avatarAudioSource.data.positional = false;
@@ -45,7 +46,7 @@ AFRAME.registerComponent('megaphone', {
         this.data.avatarAudioSource.remove();
         this.data.avatarAudioSource.createAudio();
       }
-
+      
       this.data.isActive = isMegaphoneActive;
     },
     initVariables: function()
