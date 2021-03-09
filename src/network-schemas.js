@@ -233,28 +233,10 @@ function registerNetworkSchemas() {
       {
         component: "media-frame",
         property: "originalTargetScale"
-      },
-      {
-        component: "trigger",
       }
     ],
     // TODO we probably want media frames to support permissioning of some form
     nonAuthorizedComponents: ["media-frame"]
-  });
-
-  NAF.schemas.add({
-    template: "#interactable-trigger",
-    components: [
-      {
-        component: "trigger",
-        property: "targetId"
-      },
-      {
-        component: "trigger",
-        property: "originalTargetScale"
-      }
-    ],
-    nonAuthorizedComponents: ["trigger"]
   });
 
   NAF.schemas.add({

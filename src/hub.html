@@ -567,51 +567,17 @@
                 </a-entity>
             </template>
 
-            <template id="interactable-trigger">
+            <template id="interactable-frame-trigger">
                 <!--
                     note we intentionally don't setup the shape or media-frame here since they both don't support dynamic updates
                     and so must be configured when creating the entity on each client. Since we only support media frames in scenes
                     for now, this is acceptable, but TODO this will need to be handled if we want to dynamically spawn them.
                 -->
                 <a-entity  
-                class="interactable" 
-                template-component="test" 
                 body-helper="type: kinematic; collisionFilterGroup: 16; collisionFilterMask: 1; disableCollision: true;" >
                 </a-entity>
 
             </template>
-
-            <template id="interactable-cylinder">
-                <!--
-                    note we intentionally don't setup the shape or media-frame here since they both don't support dynamic updates
-                    and so must be configured when creating the entity on each client. Since we only support media frames in scenes
-                    for now, this is acceptable, but TODO this will need to be handled if we want to dynamically spawn them.
-                -->
-                <a-cylinder 
-                class="interactable"
-                group-id="1"
-                ill-interactions
-                position="1 0.75 -3" 
-                radius="0.5" 
-                height="1.5" 
-                color="#FFC65D"
-                geometry="primitive: cylinder" 
-                material="color: red">
-            </a-cylinder>
-
-                
-            </template>
-           
-            <template id="interactable-Sphere">
-                <!--
-                    note we intentionally don't setup the shape or media-frame here since they both don't support dynamic updates
-                    and so must be configured when creating the entity on each client. Since we only support media frames in scenes
-                    for now, this is acceptable, but TODO this will need to be handled if we want to dynamically spawn them.
-                -->
-                <a-entity  class="interactable" template-component="test">
-                </a-entity>
-            </template>
-
 
             <template id="linked-media">
                 <a-entity

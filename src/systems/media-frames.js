@@ -139,10 +139,6 @@ AFRAME.registerComponent("media-frame", {
 
   init() {
     //TODO these visuals need work
-    if(this.el.className.startsWith('Trigger'))
-    {     
-      this.el.setAttribute("trigger", false);
-    }
 
     this.el.setObject3D(
       "guide",

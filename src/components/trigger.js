@@ -1,8 +1,11 @@
+import { TEXTURES_FLIP_Y } from "../loaders/HubsTextureLoader";
+
+
 export const ACTIONS ={
   MEGAPHONE: "megaphone",
   TELEPORT: "teleport",
   VISIBLE: "visible",
-  SWITCH: "switch",  
+  SWITCH: "switch active",  
   SNAP: "snap",
   AUDIOZONE: "audiozone",
 };
@@ -12,12 +15,17 @@ AFRAME.registerComponent('trigger', {
     avatar: { default: null },
     physicsSystem: { default: null },
     uuid: { default: 0 },
-    params: { default: "" },
-    action: { default: "test" },
+    bounds: { default: new THREE.Vector3(1, 1, 1) },
+    cMask: {type:"number", default: -1},
+    audioChannel: {type:"number", default: 0},
+    switchActive: { type: "boolean", default: true},
+    target: { default: "target" },
+    triggerType: { default: "none" },
     elementsInTrigger: { default: []},
 
       },
       init: function () {
+        this.data.target = "target";
         this.initVariables();
         this.setupCollisionGroup();
         this.initState();
@@ -35,7 +43,7 @@ AFRAME.registerComponent('trigger', {
       },
       initState: function()
       {
-        switch(this.action)
+        switch(this.data.triggerType)
         {
           case ACTIONS.TELEPORT:
             break;
@@ -44,28 +52,26 @@ AFRAME.registerComponent('trigger', {
           case ACTIONS.MEGAPHONE:
             break;
           case ACTIONS.SWITCH	:
-            this.switchVisibility(!(this.params[3]=='true'));
+            this.switchVisibility(!(this.data.switchActive));
             break; 
-          case ACTIONS.SWITCH	:
+          case ACTIONS.SNAP	:
+            break; 
+          case ACTIONS.AUDIOZONE	:
             break; 
           }
       },
       initVariables: function()
       {
-        this.avatar = document.querySelector("#avatar-rig");
-        this.physicsSystem = this.el.sceneEl.systems["hubs-systems"].physicsSystem;
-        //this.interactionSystem = this.el.sceneEl.systems["hubs-systems"].el.systems.interaction;
-        this.uuid = this.el.components["body-helper"].uuid;
-        this.params = this.el.className.split("-");
-        this.action = this.params[1];
-        this.elementsInTrigger = [];
-        this.el.setAttribute("media-frame", {mediaType:"none"});
+        this.data.avatar = document.querySelector("#avatar-rig");
+        this.data.physicsSystem = this.el.sceneEl.systems["hubs-systems"].physicsSystem;
+        this.data.uuid = this.el.components["body-helper"].uuid;
+        this.data.elementsInTrigger = [];
       },
       setupCollisionGroup: function()
       {
         let collisionMask = 0;
 
-          switch(this.action)
+          switch(this.data.triggerType)
           {
             case ACTIONS.TELEPORT:
               collisionMask = 5;
@@ -87,32 +93,32 @@ AFRAME.registerComponent('trigger', {
               break; 
             }
 
-        this.el.setAttribute("body-helper", {collisionFilterMask:collisionMask})
+        this.el.setAttribute("body-helper", {collisionFilterMask:this.data.cMask})
       } ,     
       CheckCollidingObjects: function() {
         
-        let collisions = this.physicsSystem.getCollisions(this.uuid);
+        let collisions = this.data.physicsSystem.getCollisions(this.data.uuid);
 
         for (let i = 0; i < collisions.length; i++) {
-          const bodyData = this.physicsSystem.bodyUuidToData.get(collisions[i]);
+          const bodyData = this.data.physicsSystem.bodyUuidToData.get(collisions[i]);
           const mediaObjectEl = bodyData && bodyData.object3D && bodyData.object3D.el;
           
-          if(!this.listContainsElement(this.elementsInTrigger, mediaObjectEl))
+          if(!this.listContainsElement(this.data.elementsInTrigger, mediaObjectEl))
           {
-            this.elementsInTrigger.push(mediaObjectEl);
+            this.data.elementsInTrigger.push(mediaObjectEl);
 
             this.onTriggerEnter(mediaObjectEl);
           }
         }
 
-        for (let i = 0; i < this.elementsInTrigger.length; i++) 
+        for (let i = 0; i < this.data.elementsInTrigger.length; i++) 
         {
-          const element = this.elementsInTrigger[i];
+          const element = this.data.elementsInTrigger[i];
           let elementFound = false;
 
           for (let i = 0; i < collisions.length; i++) 
           {
-            const bodyData = this.physicsSystem.bodyUuidToData.get(collisions[i]);
+            const bodyData = this.data.physicsSystem.bodyUuidToData.get(collisions[i]);
             const mediaObjectEl = bodyData && bodyData.object3D && bodyData.object3D.el;
 
             if(mediaObjectEl.object3D.uuid == element.object3D.uuid)
@@ -126,16 +132,18 @@ AFRAME.registerComponent('trigger', {
           {
             this.onTriggerLeft(element);
             
-            this.elementsInTrigger.splice(i,1);
+            this.data.elementsInTrigger.splice(i,1);
           }
         }
       },
       onTriggerEnter: function(element)
       {
-        switch(this.action)
+        console.log("trigger onTriggerEnter");
+
+        switch(this.data.triggerType)
         {
           case ACTIONS.TELEPORT:
-            this.teleportElement(element, this.params[2]);
+            this.teleportElement(element, this.data.target);
             break;
           case ACTIONS.VISIBLE:
             this.changeVisibility(element, false);
@@ -144,19 +152,21 @@ AFRAME.registerComponent('trigger', {
             this.changeMegaphone(true);
             break;
           case ACTIONS.SWITCH:
-            this.switchVisibility(this.params[3]=='true');
+            this.switchVisibility(this.data.switchActive);
             break;
             case ACTIONS.SNAP:
               this.snap(element);
               break;          
             case ACTIONS.AUDIOZONE:
-              this.setAudioZone(element, this.params[2]);
+              this.setAudioZone(element, this.data.audioChannel);
               break;
         }
       },
       onTriggerLeft: function(element)
       {
-        switch(this.action)
+        console.log("trigger onTriggerLeft");
+
+        switch(this.data.triggerType)
         {
           case ACTIONS.TELEPORT:
             break;
@@ -167,9 +177,9 @@ AFRAME.registerComponent('trigger', {
             this.changeMegaphone(false);
             break;
           case ACTIONS.SWITCH:
-            if(this.elementsInTrigger.length<=1)
+            if(this.data.elementsInTrigger.length<=1)
             {
-              this.switchVisibility(!(this.params[3]=='true'));
+              this.switchVisibility(!(this.data.switchActive));
             }
             break;
           case ACTIONS.SNAP:
@@ -181,18 +191,22 @@ AFRAME.registerComponent('trigger', {
       },
       setAudioZone: function(element, channelNumber)
       {
-         if(NAF.utils.isMine(element) && this.avatar.components["audio-channel"])
+         if(NAF.utils.isMine(element) && this.data.avatar.components["audio-channel"])
           {
-            this.avatar.components["audio-channel"].setChannel(channelNumber);
+            this.data.avatar.components["audio-channel"].setChannel(channelNumber);
           }
           else
           {
-            this.avatar.components["audio-channel"].updateChannel();
+            this.data.avatar.components["audio-channel"].updateChannel();
           }
       },
       switchVisibility: function(isVisible)
       {
-        let target = document.querySelector("."+this.params[2]);
+        console.log("trigger switchVisibility", this.data.target);
+
+        let target = document.querySelector("."+this.data.target);
+        
+        console.log("trigger switchVisibility", isVisible);
         
         if(target)
         {
@@ -201,7 +215,7 @@ AFRAME.registerComponent('trigger', {
       },
       changeMegaphone: function(isActivated)
       {
-          this.avatar.setAttribute("isMegaphone",isActivated);
+          this.data.avatar.setAttribute("isMegaphone",isActivated);
       },
       teleportElement: function(element, targetClassName)
       {
@@ -212,7 +226,7 @@ AFRAME.registerComponent('trigger', {
 
         if(element.className=="AvatarRoot" || element.className=="Head")
         {
-          element = this.avatar;
+          element = this.data.avatar;
         }
 
         const position = document.querySelector("."+targetClassName);
@@ -243,9 +257,9 @@ AFRAME.registerComponent('trigger', {
         const bodyAUUID = entityA.components["body-helper"].uuid;
         const bodyBUUID = entityB.components["body-helper"].uuid;
         return (
-          this.physicsSystem.bodyInitialized(bodyAUUID) &&
-          this.physicsSystem.bodyInitialized(bodyBUUID) &&
-          this.physicsSystem.getCollisions(bodyAUUID).indexOf(bodyBUUID) !== -1
+          this.data.physicsSystem.bodyInitialized(bodyAUUID) &&
+          this.data.physicsSystem.bodyInitialized(bodyBUUID) &&
+          this.data.physicsSystem.getCollisions(bodyAUUID).indexOf(bodyBUUID) !== -1
         );
       },
       listContainsElement: function(list, element)

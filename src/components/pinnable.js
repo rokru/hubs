@@ -57,6 +57,7 @@ AFRAME.registerComponent("pinnable", {
           easing: "easeOutElastic"
         });
 
+
         if (this.el.components["body-helper"] && !this.el.sceneEl.systems.interaction.isHeld(this.el)) {
           this.el.setAttribute("body-helper", { type: "kinematic" });
         }
