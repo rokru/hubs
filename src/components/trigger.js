@@ -29,6 +29,7 @@ AFRAME.registerComponent('trigger', {
         this.initVariables();
         this.setupCollisionGroup();
         this.initState();
+        this.setBorder();
       },  
       tick: function()
       {
@@ -40,6 +41,65 @@ AFRAME.registerComponent('trigger', {
         {
           console.error(e);
         }
+      },
+      setBorder: function()
+      {
+        this.el.object3D.visible= false;
+
+        this.el.setObject3D(
+          "guide",
+          new THREE.Mesh(
+            new THREE.BoxGeometry(this.data.bounds.x, this.data.bounds.y, this.data.bounds.z),
+            new THREE.ShaderMaterial({
+              uniforms: {
+                color: { value: new THREE.Color(0xFF00FF) }
+              },
+              vertexShader: `
+                varying vec2 vUv;
+                void main()
+                {
+                  gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+                  vUv = uv;
+                }
+              `,
+              fragmentShader: `
+                // adapted from https://www.shadertoy.com/view/Mlt3z8
+                float bayerDither2x2( vec2 v ) {
+                  return mod( 3.0 * v.y + 2.0 * v.x, 4.0 );
+                }
+                float bayerDither4x4( vec2 v ) {
+                  vec2 P1 = mod( v, 2.0 );
+                  vec2 P2 = mod( floor( 0.5  * v ), 2.0 );
+                  return 4.0 * bayerDither2x2( P1 ) + bayerDither2x2( P2 );
+                }
+    
+                varying vec2 vUv;
+                uniform vec3 color;
+                void main() {
+                  float alpha = max(step(0.45, abs(vUv.x - 0.5)), step(0.45, abs(vUv.y - 0.5))) - 0.5;
+                  if( ( bayerDither4x4( floor( mod( gl_FragCoord.xy, 4.0 ) ) ) ) / 16.0 >= alpha ) discard;
+                  gl_FragColor = vec4(color, 1.0);
+                }
+              `,
+              side: THREE.DoubleSide
+            })
+          )
+        );
+    
+        const previewMaterial = new THREE.MeshBasicMaterial();
+        previewMaterial.side = THREE.DoubleSide;
+        previewMaterial.transparent = true;
+        previewMaterial.opacity = 1.0;
+    
+        const geometry = new THREE.PlaneBufferGeometry(1, 2, 1, 2, TEXTURES_FLIP_Y);
+        const previewMesh = new THREE.Mesh(geometry, previewMaterial);
+        previewMesh.visible = false;
+        this.el.setObject3D("preview", previewMesh);
+
+        const Mesh = this.el.getObject3D("preview");
+        Mesh.material.map = null;
+        Mesh.material.needsUpdate = true;
+        Mesh.visible = false;
       },
       initState: function()
       {

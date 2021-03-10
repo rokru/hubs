@@ -107,7 +107,7 @@ export async function connectToReticulum(debug = false, params = null, socketCla
   };
 
   const socketUrl = await getNewSocketUrl();
-  console.log(`Phoenix Socket URL: ${socketUrl}`);
+  //console.log(`Phoenix Socket URL: ${socketUrl}`);
 
   const socketSettings = {};
 
@@ -181,10 +181,10 @@ export async function createAndRedirectToNewHub(name, sceneId, replace) {
     headers.authorization = `bearer ${store.state.credentials.token}`;
   }
 
-  console.log("phoenix createAndRedirectToNewHub createUrl", createUrl);
-  console.log("phoenix createAndRedirectToNewHub body", JSON.stringify(payload));
-  console.log("phoenix createAndRedirectToNewHub headers", headers);
-  console.log("phoenix createAndRedirectToNewHub headers.authorization", headers.authorization);
+  //console.log("phoenix createAndRedirectToNewHub createUrl", createUrl);
+  //console.log("phoenix createAndRedirectToNewHub body", JSON.stringify(payload));
+  //console.log("phoenix createAndRedirectToNewHub headers", headers);
+  //console.log("phoenix createAndRedirectToNewHub headers.authorization", headers.authorization);
 
   let res = await fetch(createUrl, {
     body: JSON.stringify(payload),
@@ -192,7 +192,7 @@ export async function createAndRedirectToNewHub(name, sceneId, replace) {
     method: "POST"
   }).then(r => r.json());
 
-  console.log("phoenix createAndRedirectToNewHub res", res);
+  //console.log("phoenix createAndRedirectToNewHub res", res);
 
   if (res.error === "invalid_token") {
     // Clear the invalid token from store.
