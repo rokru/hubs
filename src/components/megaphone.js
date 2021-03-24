@@ -34,6 +34,7 @@ AFRAME.registerComponent('megaphone', {
       
       if(isMegaphoneActive==true)
       {               
+        this.data.defaultRef = this.data.avatarAudioSource.data.refDistance;
         this.data.avatarAudioSource.data.refDistance = 100;
         this.data.avatarAudioSource.data.positional = false;
         this.data.avatarAudioSource.remove();
@@ -54,7 +55,6 @@ AFRAME.registerComponent('megaphone', {
       try
       {
         this.data.avatarAudioSource = this.el.querySelector("[avatar-audio-source]").components['avatar-audio-source'];
-        this.data.defaultRef = this.data.avatarAudioSource.data.refDistance;
       }
       catch(e)
       {

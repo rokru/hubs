@@ -17,9 +17,9 @@ AFRAME.registerComponent('trigger', {
     uuid: { default: 0 },
     bounds: { default: new THREE.Vector3(1, 1, 1) },
     cMask: {type:"number", default: -1},
-    audioChannel: {type:"number", default: 0},
+    channel: {type:"number", default: 0},
     switchActive: { type: "boolean", default: true},
-    target: { default: "target" },
+    targetName: { default: "target" },
     triggerType: { default: "none" },
     elementsInTrigger: { default: []},
 
@@ -202,7 +202,7 @@ AFRAME.registerComponent('trigger', {
         switch(this.data.triggerType)
         {
           case ACTIONS.TELEPORT:
-            this.teleportElement(element, this.data.target);
+            this.teleportElement(element, this.data.targetName);
             break;
           case ACTIONS.VISIBLE:
             this.changeVisibility(element, false);
@@ -217,7 +217,7 @@ AFRAME.registerComponent('trigger', {
               this.snap(element);
               break;          
             case ACTIONS.AUDIOZONE:
-              this.setAudioZone(element, this.data.audioChannel);
+              this.setAudioZone(element, this.data.channel);
               break;
         }
       },
@@ -261,15 +261,15 @@ AFRAME.registerComponent('trigger', {
       },
       switchVisibility: function(isVisible)
       {
-        console.log("trigger switchVisibility", this.data.target);
+        console.log("trigger switchVisibility", this.data.targetName);
 
-        let target = document.querySelector("."+this.data.target);
+        let targetName = document.querySelector("."+this.data.targetName);
         
         console.log("trigger switchVisibility", isVisible);
         
-        if(target)
+        if(targetName)
         {
-          target.setAttribute("visible", isVisible);
+          targetName.setAttribute("visible", isVisible);
         }
       },
       changeMegaphone: function(isActivated)
