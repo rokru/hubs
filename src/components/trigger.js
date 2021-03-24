@@ -25,11 +25,10 @@ AFRAME.registerComponent('trigger', {
 
       },
       init: function () {
-        this.data.target = "target";
         this.initVariables();
         this.setupCollisionGroup();
         this.initState();
-        this.setBorder();
+        //this.setBorder();
       },  
       tick: function()
       {
@@ -153,7 +152,7 @@ AFRAME.registerComponent('trigger', {
               break; 
             }
 
-        this.el.setAttribute("body-helper", {collisionFilterMask:this.data.cMask})
+        this.el.setAttribute("body-helper", {collisionFilterMask:collisionMask})
       } ,     
       CheckCollidingObjects: function() {
         
