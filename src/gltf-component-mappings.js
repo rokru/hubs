@@ -191,6 +191,8 @@ AFRAME.GLTFModelPlus.registerComponent("frame-trigger", "frame-trigger", (el, co
   el.setAttribute("trigger", componentData);
 });
 
+
+
 AFRAME.GLTFModelPlus.registerComponent("media", "media", (el, componentName, componentData) => {
  
   if (componentData.id) {

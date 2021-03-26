@@ -43,15 +43,13 @@ AFRAME.registerComponent('trigger', {
       },
       setBorder: function()
       {
-        this.el.object3D.visible= false;
-
         this.el.setObject3D(
           "guide",
           new THREE.Mesh(
             new THREE.BoxGeometry(this.data.bounds.x, this.data.bounds.y, this.data.bounds.z),
             new THREE.ShaderMaterial({
               uniforms: {
-                color: { value: new THREE.Color(0xFF00FF) }
+                color: { value: new THREE.Color(0x0F0F0F) }
               },
               vertexShader: `
                 varying vec2 vUv;
@@ -77,28 +75,29 @@ AFRAME.registerComponent('trigger', {
                 void main() {
                   float alpha = max(step(0.45, abs(vUv.x - 0.5)), step(0.45, abs(vUv.y - 0.5))) - 0.5;
                   if( ( bayerDither4x4( floor( mod( gl_FragCoord.xy, 4.0 ) ) ) ) / 16.0 >= alpha ) discard;
-                  gl_FragColor = vec4(color, 1.0);
+                  gl_FragColor = vec4(color, 0.5);
                 }
               `,
               side: THREE.DoubleSide
             })
           )
         );
-    
+    /*
         const previewMaterial = new THREE.MeshBasicMaterial();
         previewMaterial.side = THREE.DoubleSide;
         previewMaterial.transparent = true;
         previewMaterial.opacity = 1.0;
     
-        const geometry = new THREE.PlaneBufferGeometry(1, 2, 1, 2, TEXTURES_FLIP_Y);
+        const geometry = new THREE.PlaneBufferGeometry(this.data.bounds.x, this.data.bounds.y, 1, 1, TEXTURES_FLIP_Y);
         const previewMesh = new THREE.Mesh(geometry, previewMaterial);
-        previewMesh.visible = false;
+        previewMesh.visible = true;
         this.el.setObject3D("preview", previewMesh);
 
         const Mesh = this.el.getObject3D("preview");
         Mesh.material.map = null;
         Mesh.material.needsUpdate = true;
-        Mesh.visible = false;
+        Mesh.visible = true;
+        */
       },
       initState: function()
       {
@@ -151,6 +150,8 @@ AFRAME.registerComponent('trigger', {
               collisionMask = 4;
               break; 
             }
+
+        console.log("trigger collisionFilterMask", this.data.cMask);
 
         this.el.setAttribute("body-helper", {collisionFilterMask:collisionMask})
       } ,     
@@ -250,14 +251,19 @@ AFRAME.registerComponent('trigger', {
       },
       setAudioZone: function(element, channelNumber)
       {
-         if(NAF.utils.isMine(element) && this.data.avatar.components["audio-channel"])
-          {
-            this.data.avatar.components["audio-channel"].setChannel(channelNumber);
-          }
-          else
-          {
-            this.data.avatar.components["audio-channel"].updateChannel();
-          }
+        if(!this.data.avatar.components["audio-channel"])
+        {
+          return;
+        }
+
+        if(NAF.utils.isMine(element))
+        {
+          this.data.avatar.components["audio-channel"].setChannel(channelNumber);
+        }
+        else
+        {
+          this.data.avatar.components["audio-channel"].updateChannel();
+        }
       },
       switchVisibility: function(isVisible)
       {
