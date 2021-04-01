@@ -117,16 +117,16 @@
                                     billboard
                                     class="nametag"
                                     text="side: double; align: center; color: #ddd"
-                                    position="0 1 0"
-                                    scale="6 6 6"
+                                    position="0 0.4 0"
+                                    scale="2 2 2"
                                 ></a-entity>
                                 <a-entity
                                     billboard
                                     class="identityName"
                                     text="side: double; align: center; color: #ddd"
                                     visibility-while-frozen="withinDistance: 100; requireHoverOnNonMobile: false;"
-                                    position="0 0.8 0"
-                                    scale="3 3 3"
+                                    position="0 0.5 0"
+                                    scale="0 0 0"
                                 ></a-entity>
                                 <a-entity
                                     billboard
@@ -134,15 +134,15 @@
                                     class="recordingBadge"
                                     sprite="name: recording-badge.png"
                                     scale="0.10 0.10 0.10"
-                                    position="0 1.2 -0.02"
+                                    position="0 1.2 0"
                                 ></a-entity>
                                 <a-entity
                                     billboard
                                     is-not-remote-hover-target
                                     class="modBadge"
                                     sprite="name: mod-badge.png"
-                                    scale="0.10 0.10 0.10"
-                                    position="0 1.2 -0.02"
+                                    scale="0.1 0.1 0.1"
+                                    position="0 0.55 0"
                                 ></a-entity>
                             </a-entity>
                         </template>
@@ -153,11 +153,11 @@
                                 <a-entity class="chest-image" scale="0.18 0.18 0.18" position="0 -0.025 0.13"></a-entity>
                                 <a-entity class="interactable ui interactable-ui">
                                     <a-entity billboard class="freeze-menu" visibility-while-frozen="withinDistance: 100; requireHoverOnNonMobile: false;" avatar-volume-controls>
-                                        <a-entity class="avatar-volume-label" text="value: 0%; anchor: center; align: center; color: #ff3464; letterSpacing: 4; width:1.5;" text-raycast-hack position="0.0 0.675 0.35" scale="1.25 1.25 1.25"></a-entity>
-                                        <a-entity mixin="rounded-button" is-remote-hover-target tags="singleActionButton: true;" position="-0.45 0.675 0.35" class="avatar-volume-down-button">
+                                        <a-entity class="avatar-volume-label" text="value: 0%; anchor: center; align: center; color: #ff3464; letterSpacing: 4; width:1.5;" text-raycast-hack position="0.0 0.75 0.35" scale="1.25 1.25 1.25"></a-entity>
+                                        <a-entity mixin="rounded-button" is-remote-hover-target tags="singleActionButton: true;" position="-0.45 0.75 0.35" class="avatar-volume-down-button">
                                             <a-entity text="value: -; anchor: center; align: center; color: #ccc; letterSpacing: 4; width: 2.5;" text-raycast-hack position="0 0 0.001" scale="0.85 0.85 0.85"></a-entity>
                                         </a-entity>
-                                        <a-entity mixin="rounded-button" is-remote-hover-target tags="singleActionButton: true;" position="0.45 0.675 0.35" class="avatar-volume-up-button">
+                                        <a-entity mixin="rounded-button" is-remote-hover-target tags="singleActionButton: true;" position="0.45 0.75 0.35" class="avatar-volume-up-button">
                                             <a-entity text="value: +; anchor: center; align: center; color: #ccc; letterSpacing: 4; width: 2.5;" text-raycast-hack position="0 0 0.001" scale="0.85 0.85 0.85"></a-entity>
                                         </a-entity>
                                         <a-entity is-remote-hover-target tags="singleActionButton:true;" mixin="rounded-text-button" block-button position="0 0 .35">
