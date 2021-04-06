@@ -7,6 +7,7 @@ import { SOUND_QUACK, SOUND_SPECIAL_QUACK } from "./systems/sound-effects-system
 import ducky from "./assets/models/DuckyMesh.glb";
 import { ObjectContentOrigins } from "./object-types";
 import GROUP_ID from "./scene-entry-manager";
+import { CameraSystem } from "./systems/camera-system";
 
 let uiRoot;
 // Handles user-entered messages
@@ -72,6 +73,21 @@ export default class MessageDispatch {
             break;
           }
         }
+        case "fov":
+          console.log("fov", args);
+
+          var customFOV = args[0];
+          console.log("fov customFOV", customFOV);
+
+          var viewingCamera = document.getElementById("viewing-camera");
+
+          if (viewingCamera?.components.camera) {
+            viewingCamera.setAttribute("camera", { fov: customFOV });
+          }
+
+          viewingCamera.object3DMap.camera.matrixNeedsUpdate = true;
+          viewingCamera.object3DMap.camera.updateMatrix();
+          viewingCamera.object3DMap.camera.updateMatrixWorld();
 
         break;
       case "shrink":
