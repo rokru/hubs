@@ -24,16 +24,19 @@ AFRAME.registerComponent('audio-channel', {
         }
         catch(e)
         {
-          //console.error(e);
+          console.error(e);
         }
       },
       tick: function()
       {   
-        if(this.el.id!="avatar-rig" && this.data.avatarAudioSource == null)
+        if(this.el.id!="avatar-rig")
+        {
+          return;
+        }
+
+        if(this.data.avatarAudioSource == null)
         {
           this.initVariables();
-          
-          return;
         }
 
         if(this.el.id!="avatar-rig")
@@ -69,7 +72,7 @@ AFRAME.registerComponent('audio-channel', {
         this.data.localChannel = this.data.channel;
         this.data.audioState = audioState;
 
-        if(this.el.id=="avatar-rig")
+        if(this.el.id=="avatar-rig" || !this.data.avatarAudioSource)
         {
           return;
         }
