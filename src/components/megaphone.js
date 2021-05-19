@@ -2,7 +2,7 @@ AFRAME.registerComponent('megaphone', {
   schema: {
         isActive: {type: "boolean", default: false},
         isLocked: {type: "boolean", default: false},
-        avatarAudioSource: {type: "asset", default: null},
+        avatarAudioSource: {default: ""},
         defaultRef: {type: "number", default: 2},
       },
       init: function () {
@@ -75,6 +75,14 @@ AFRAME.registerComponent('megaphone', {
         return;
       }
 
-      this.set(this.el.getAttribute("isMegaphone")=="true");
+      try
+      {
+        this.set(this.el.getAttribute("isMegaphone")=="true");
+      }
+      catch(e)
+      {
+        console.error(e);
+      }
+
     },     
   });

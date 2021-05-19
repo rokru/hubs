@@ -4,7 +4,7 @@ AFRAME.registerComponent('audio-channel', {
   schema: {
       channel: {type: "number", default: 0},
       localChannel: {type: "number", default: -1},
-      avatarAudioSource: {type: "asset", default: null},
+      avatarAudioSource: {default: ""},
       defaultRef: {type: "number", default: 2},
       audioState: {type: "boolean", default: true},
     },
@@ -23,7 +23,7 @@ AFRAME.registerComponent('audio-channel', {
         }
         catch(e)
         {
-          console.error(e);
+          //console.error(e);
         }
       },
       tick: function()
@@ -35,9 +35,16 @@ AFRAME.registerComponent('audio-channel', {
           return;
         }
 
-        if(this.data.localChannel != this.data.channel)
+        try
         {
-          this.updateChannel();
+          if(this.data.localChannel != this.data.channel)
+          {
+            this.updateChannel();
+          }  
+        }
+        catch(e)
+        {
+          console.error(e);
         }
       },
       updateChannel: function()

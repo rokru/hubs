@@ -9,15 +9,15 @@ export const ACTIONS ={
   SWITCH: "switch active",  
   SNAP: "snap",
   AUDIOZONE: "audiozone",
-  CHANGE_ROOM: "change room",
+  CHANGE_ROOM: "Change Room",
 };
 
 AFRAME.registerComponent('trigger', {
   schema: {
-    avatar: { default: null },
-    physicsSystem: { default: null },
+    avatar: { default: "" },
+    physicsSystem: { default: "" },
     uuid: { default: 0 },
-    bounds: { default: new THREE.Vector3(1, 1, 1) },
+    bounds: { default: ""},
     cMask: {type:"number", default: -1},
     channel: {type:"number", default: 0},
     switchActive: { type: "boolean", default: true},
@@ -103,7 +103,7 @@ AFRAME.registerComponent('trigger', {
       },
       initState: function()
       {
-        console.log("trigger initState", this.data.triggerType);
+        //console.log("trigger initState", this.data.triggerType);
         switch(this.data.triggerType)
         {
           case ACTIONS.TELEPORT:
@@ -125,9 +125,9 @@ AFRAME.registerComponent('trigger', {
       },
       initVariables: function()
       {
-        console.log("trigger initVariables", this.data);
+        //console.log("trigger initVariables", this.data);
 
-
+        this.data.bounds = new THREE.Vector3(1, 1, 1) ;
         this.data.avatar = document.querySelector("#avatar-rig");
         this.data.physicsSystem = this.el.sceneEl.systems["hubs-systems"].physicsSystem;
         this.data.uuid = this.el.components["body-helper"].uuid;
@@ -137,7 +137,7 @@ AFRAME.registerComponent('trigger', {
       },
       setupCollisionGroup: function()
       {
-        console.log("trigger setupCollisionGroup", this.data.cMask);
+        //console.log("trigger setupCollisionGroup", this.data.cMask);
 
         let collisionMask = 0;
 
@@ -222,7 +222,7 @@ AFRAME.registerComponent('trigger', {
       },
       onTriggerEnter: function(element)
       {
-        console.log("trigger onTriggerEnter", element);
+        //console.log("trigger onTriggerEnter", element);
 
         switch(this.data.triggerType)
         {
@@ -254,7 +254,7 @@ AFRAME.registerComponent('trigger', {
       },
       onTriggerLeft: function(element)
       {
-        console.log("trigger onTriggerLeft", element);
+        //console.log("trigger onTriggerLeft", element);
 
         switch(this.data.triggerType)
         {
@@ -287,8 +287,8 @@ AFRAME.registerComponent('trigger', {
       },
       setAudioZone: function(element, channelNumber)
       {
-        console.log("trigger setAudioZone", element);
-        console.log("trigger channelNumber", channelNumber);
+        //console.log("trigger setAudioZone", element);
+        //console.log("trigger channelNumber", channelNumber);
 
         if(!this.data.avatar.components["audio-channel"])
         {
@@ -306,7 +306,7 @@ AFRAME.registerComponent('trigger', {
       },
       switchVisibility: function(isVisible)
       {
-        console.log("trigger switchVisibility", isVisible);
+        //console.log("trigger switchVisibility", isVisible);
 
         let targetName = document.querySelector("."+this.data.targetName);
                
@@ -317,14 +317,14 @@ AFRAME.registerComponent('trigger', {
       },
       changeMegaphone: function(isActivated)
       {
-        console.log("trigger changeMegaphone", isActivated);
+        //console.log("trigger changeMegaphone", isActivated);
 
         this.data.avatar.setAttribute("ismegaphone",isActivated);
       },
       teleportElement: function(element, targetClassName)
       {
-        console.log("trigger teleportElement", element);
-        console.log("trigger teleportElement", targetClassName);
+        //console.log("trigger teleportElement", element);
+        //console.log("trigger teleportElement", targetClassName);
 
         if(!NAF.utils.isMine(element))
         {
@@ -358,14 +358,14 @@ AFRAME.registerComponent('trigger', {
       },
       changeVisibility: function(element, isVisible)
       {
-        console.log("trigger changeVisibility", element);
-        console.log("trigger changeVisibility", isVisible);
+        //console.log("trigger changeVisibility", element);
+        //console.log("trigger changeVisibility", isVisible);
 
         element.setAttribute("visible", isVisible);
       },
       snap: function(element)
       {
-        console.log("trigger snap", element);
+        //console.log("trigger snap", element);
 
         if(element.components["floaty-object"])
         {
@@ -377,7 +377,10 @@ AFRAME.registerComponent('trigger', {
       },
       enterNewRoom: function()
       {
-        window.open(this.data.newRoomUrl,"_self");
+        if(this.data.newRoomUrl != "" && this.data.newRoomUrl != null)
+        {
+          window.open(this.data.newRoomUrl,"_self");
+        }
       },
       isColliding: function(entityA, entityB) {
         const bodyAUUID = entityA.components["body-helper"].uuid;
