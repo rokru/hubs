@@ -70,6 +70,12 @@ export default class MessageDispatch extends EventTarget {
           avatarHead.setAttribute("ismegaphone", false);
         }        
       break;
+      case "ss":     
+      console.log("/ss command called");  
+      //document.querySelector('a-scene').components.screenshot.capture('perspective')
+      //document.querySelector('a-scene').components.screenshot.getCanvas('equirectangular');
+      document.querySelector('a-scene').components.screenshot.capture('equirectangular');
+    break;
       case "fov":
         var customFOV = args[0];
         console.log("fov customFOV", customFOV);
