@@ -1,13 +1,32 @@
+import { number } from "prop-types";
 import { isLocalHubsSceneUrl, isHubsRoomUrl, isLocalHubsAvatarUrl } from "../utils/media-url-utils";
 import { guessContentType } from "../utils/media-url-utils";
 import { handleExitTo2DInterstitial } from "../utils/vr-interstitial";
 
+const BUTTON_DATA_REQUEST = new Request(
+  "https://fh-erfurt.info/api/v1/media/search?source=rooms&filter=public", 
+  {
+  method:'GET',
+  mode: 'cors',
+  cache: 'no-cache',
+  credentials: 'same-origin',
+  headers: {'Content-type':'application/json'}
+});
+
+const UPDATE_INTERVAL = 10000;
+
 AFRAME.registerComponent("open-media-button", {
   schema: {
-    onlyOpenLink: { type: "boolean" }
+    onlyOpenLink: { type: "boolean" },
+    numberOfCurrentUsers: {type: "number"},
+    roomSize: {type: "number"},
+    roomSizeSubscription:{},
+    label: {}
   },
   init() {
     this.label = this.el.querySelector("[text]");
+    this.numberOfCurrentUsers = 0;
+    this.roomSize = 0;
 
     this.updateSrc = async () => {
       if (!this.targetEl.parentNode) return; // If removed
@@ -19,22 +38,27 @@ AFRAME.registerComponent("open-media-button", {
       this.el.object3D.visible = !!visible;
 
       if (visible) {
-        let label = "open link";
+        let label = " Link öffnen ";
         if (!this.data.onlyOpenLink) {
           if (await isLocalHubsAvatarUrl(src)) {
-            label = "Avatar verwenden";
+            label = " Avatar verwenden ";
           } else if ((await isLocalHubsSceneUrl(src)) && mayChangeScene) {
-            label = "Szene wechseln";
+            label = " Szene wechseln ";
           } else if (await isHubsRoomUrl(src)) {
             const url = new URL(this.src);
             if (url.hash && window.location.pathname === url.pathname) {
-              label = "Betreten";
+              label = " Betreten ";
             } else {
-              label = "Raum betreten";
+              label = " Raum betreten ";
+
+              this.roomSizeSubscription = window.setInterval(function(){
+                this.updateLabel();
+              }.bind(this), UPDATE_INTERVAL);            
             }
           }
         }
-        this.label.setAttribute("text", "value", label);
+        this.label.setAttribute("text", "value:"+label);
+
       }
     };
 
@@ -74,5 +98,38 @@ AFRAME.registerComponent("open-media-button", {
 
   pause() {
     this.el.object3D.removeEventListener("interact", this.onClick);
+  },
+
+  async updateLabel()
+  {
+    let response = await fetch(BUTTON_DATA_REQUEST);
+    
+    response.json().then(json=>{
+      let entries = json.entries;
+      let isEntryFound = false;
+
+      for(let i = 0; i<entries.length; i++)
+      {
+        let entry = entries[i];
+        
+        if(entry.url == this.src)
+        {
+          isEntryFound = true;
+          this.numberOfCurrentUsers = entry.member_count;
+          this.roomSize = entry.room_size;
+
+          var labelText = " Raum betreten \n ("+this.numberOfCurrentUsers+"/"+this.roomSize+")";
+          this.label.setAttribute("text", "value:"+labelText);
+          break;
+        }
+      }
+
+      if(!isEntryFound)
+      {
+        clearInterval(this.roomSizeSubscription) //use this to cancel update
+      }      
+    })
   }
 });
+
+

@@ -200,7 +200,7 @@ export function MediaTile({ entry, processThumbnailUrl, onClick, onEdit, onShowS
       {entry.favorited && <StarIcon className={styles.favoriteIcon} />}
       {entry.member_count !== undefined && (
         <div className={styles.memberCount}>
-          <PeopleIcon /> <span>{entry.member_count}</span>
+          <PeopleIcon /> <span>{entry.member_count}/{entry.room_size}</span>
         </div>
       )}
       <div className={styles.tileActions}>
