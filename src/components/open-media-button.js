@@ -7,9 +7,6 @@ const BUTTON_DATA_REQUEST = new Request(
   "https://fh-erfurt.info/api/v1/media/search?source=rooms&filter=public", 
   {
   method:'GET',
-  mode: 'cors',
-  cache: 'no-cache',
-  credentials: 'same-origin',
   headers: {'Content-type':'application/json'}
 });
 
@@ -102,33 +99,35 @@ AFRAME.registerComponent("open-media-button", {
 
   async updateLabel()
   {
-    let response = await fetch(BUTTON_DATA_REQUEST);
-    
-    response.json().then(json=>{
-      let entries = json.entries;
-      let isEntryFound = false;
+    fetch(BUTTON_DATA_REQUEST).then(response =>{
+      response.json().then(json=>{
+        let entries = json.entries;
+        let isEntryFound = false;
 
-      for(let i = 0; i<entries.length; i++)
-      {
-        let entry = entries[i];
-        
-        if(entry.url == this.src)
+        for(let i = 0; i<entries.length; i++)
         {
-          isEntryFound = true;
-          this.numberOfCurrentUsers = entry.member_count;
-          this.roomSize = entry.room_size;
+          let entry = entries[i];
+          
+          if(entry.url == this.src)
+          {
+            isEntryFound = true;
+            this.numberOfCurrentUsers = entry.member_count;
+            this.roomSize = entry.room_size;
 
-          var labelText = " Raum betreten \n ("+this.numberOfCurrentUsers+"/"+this.roomSize+")";
-          this.label.setAttribute("text", "value:"+labelText);
-          break;
+            var labelText = " Raum betreten \n ("+this.numberOfCurrentUsers+"/"+this.roomSize+")";
+            this.label.setAttribute("text", "value:"+labelText);
+            break;
+          }
         }
-      }
 
-      if(!isEntryFound)
-      {
-        clearInterval(this.roomSizeSubscription) //use this to cancel update
-      }      
-    })
+        if(!isEntryFound)
+        {
+          clearInterval(this.roomSizeSubscription) //use this to cancel update
+        }      
+      });
+    }).catch(error=>{
+      console.error(error);
+    });
   }
 });
 
