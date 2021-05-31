@@ -35,7 +35,7 @@ AFRAME.registerComponent("open-media-button", {
       this.el.object3D.visible = !!visible;
 
       if (visible) {
-        let label = " Link öffnen ";
+        let label = " Link &ouml;ffnen ";
         if (!this.data.onlyOpenLink) {
           if (await isLocalHubsAvatarUrl(src)) {
             label = " Avatar verwenden ";
