@@ -54,6 +54,7 @@ AFRAME.registerComponent("open-media-button", {
             }
           }
         }
+        this.label.setAttribute("text", "font", 'mozillavr');
         this.label.setAttribute("text", "value", label);
 
       }
