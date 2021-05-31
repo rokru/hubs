@@ -35,18 +35,18 @@ AFRAME.registerComponent("open-media-button", {
       this.el.object3D.visible = !!visible;
 
       if (visible) {
-        let label = " Link &ouml;ffnen ";
+        let label = "open link";
         if (!this.data.onlyOpenLink) {
           if (await isLocalHubsAvatarUrl(src)) {
-            label = " Avatar verwenden ";
+            label = "Avatar verwenden";
           } else if ((await isLocalHubsSceneUrl(src)) && mayChangeScene) {
-            label = " Szene wechseln ";
+            label = "Szene wechseln";
           } else if (await isHubsRoomUrl(src)) {
             const url = new URL(this.src);
             if (url.hash && window.location.pathname === url.pathname) {
-              label = " Betreten ";
+              label = "Betreten";
             } else {
-              label = " Raum betreten ";
+              label = "Raum betreten";
 
               this.roomSizeSubscription = window.setInterval(function(){
                 this.updateLabel();
@@ -54,7 +54,7 @@ AFRAME.registerComponent("open-media-button", {
             }
           }
         }
-        this.label.setAttribute("text", "value:"+label);
+        this.label.setAttribute("text", "value", label);
 
       }
     };
