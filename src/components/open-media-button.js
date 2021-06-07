@@ -47,14 +47,18 @@ AFRAME.registerComponent("open-media-button", {
               label = "Betreten";
             } else {
               label = "Raum betreten";
+              this.label.setAttribute("text", "value", label);
+              
+              this.updateLabel();
 
               this.roomSizeSubscription = window.setInterval(function(){
                 this.updateLabel();
-              }.bind(this), UPDATE_INTERVAL);            
+              }.bind(this), UPDATE_INTERVAL);  
+
+              return;        
             }
           }
         }
-        this.label.setAttribute("text", "font", 'mozillavr');
         this.label.setAttribute("text", "value", label);
 
       }

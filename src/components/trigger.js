@@ -377,6 +377,8 @@ AFRAME.registerComponent('trigger', {
       },
       enterNewRoom: function()
       {
+        console.log("enterNewRoom", this.data.newRoomUrl);
+
         if(this.data.newRoomUrl != "" && this.data.newRoomUrl != null)
         {
           window.open(this.data.newRoomUrl,"_self");
