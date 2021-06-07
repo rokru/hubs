@@ -248,7 +248,10 @@ AFRAME.registerComponent('trigger', {
             this.setAudioZone(element, this.data.channel);
             break;
           case ACTIONS.CHANGE_ROOM:
-            this.enterNewRoom();
+            if(NAF.utils.isMine(element))
+            {
+              this.enterNewRoom();
+            }
             break;
         }
       },
