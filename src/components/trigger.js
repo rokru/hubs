@@ -37,6 +37,8 @@ AFRAME.registerComponent('trigger', {
         try
         {
           this.CheckCollidingObjects();
+
+          console.log("number of elements in trigger", this.data.elementsInTrigger.length);
         }
         catch(e)
         {
@@ -222,7 +224,7 @@ AFRAME.registerComponent('trigger', {
       },
       onTriggerEnter: function(element)
       {
-        //console.log("trigger onTriggerEnter", element);
+        console.log("trigger onTriggerEnter", element);
 
         switch(this.data.triggerType)
         {
@@ -233,7 +235,7 @@ AFRAME.registerComponent('trigger', {
             this.changeVisibility(element, false);
             break;
           case ACTIONS.MEGAPHONE:
-            if(NAF.utils.isMine(element))
+            if(NAF.utils.isMine(element.el))
             {
               this.changeMegaphone(true);
             }
@@ -257,7 +259,7 @@ AFRAME.registerComponent('trigger', {
       },
       onTriggerLeft: function(element)
       {
-        //console.log("trigger onTriggerLeft", element);
+        console.log("trigger onTriggerLeft", element);
 
         switch(this.data.triggerType)
         {
@@ -284,7 +286,6 @@ AFRAME.registerComponent('trigger', {
             this.setAudioZone(element, 0);
             break;
           case ACTIONS.CHANGE_ROOM:
-            this.enterNewRoom();
             break;
         }
       },
