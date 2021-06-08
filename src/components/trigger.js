@@ -17,7 +17,7 @@ AFRAME.registerComponent('trigger', {
     avatar: { default: "" },
     physicsSystem: { default: "" },
     uuid: { default: 0 },
-    bounds: { default: ""},
+    bounds: { default: new THREE.Vector3(1, 1, 1) },
     cMask: {type:"number", default: -1},
     channel: {type:"number", default: 0},
     switchActive: { type: "boolean", default: true},
@@ -45,61 +45,49 @@ AFRAME.registerComponent('trigger', {
       },
       setBorder: function()
       {
-        this.el.setObject3D(
-          "guide",
-          new THREE.Mesh(
-            new THREE.BoxGeometry(this.data.bounds.x, this.data.bounds.y, this.data.bounds.z),
-            new THREE.ShaderMaterial({
-              uniforms: {
-                color: { value: new THREE.Color(0x0F0F0F) }
-              },
-              vertexShader: `
-                varying vec2 vUv;
-                void main()
-                {
-                  gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-                  vUv = uv;
-                }
-              `,
-              fragmentShader: `
-                // adapted from https://www.shadertoy.com/view/Mlt3z8
-                float bayerDither2x2( vec2 v ) {
-                  return mod( 3.0 * v.y + 2.0 * v.x, 4.0 );
-                }
-                float bayerDither4x4( vec2 v ) {
-                  vec2 P1 = mod( v, 2.0 );
-                  vec2 P2 = mod( floor( 0.5  * v ), 2.0 );
-                  return 4.0 * bayerDither2x2( P1 ) + bayerDither2x2( P2 );
-                }
-    
-                varying vec2 vUv;
-                uniform vec3 color;
-                void main() {
-                  float alpha = max(step(0.45, abs(vUv.x - 0.5)), step(0.45, abs(vUv.y - 0.5))) - 0.5;
-                  if( ( bayerDither4x4( floor( mod( gl_FragCoord.xy, 4.0 ) ) ) ) / 16.0 >= alpha ) discard;
-                  gl_FragColor = vec4(color, 0.5);
-                }
-              `,
-              side: THREE.DoubleSide
-            })
-          )
-        );
-    /*
-        const previewMaterial = new THREE.MeshBasicMaterial();
-        previewMaterial.side = THREE.DoubleSide;
-        previewMaterial.transparent = true;
-        previewMaterial.opacity = 1.0;
-    
-        const geometry = new THREE.PlaneBufferGeometry(this.data.bounds.x, this.data.bounds.y, 1, 1, TEXTURES_FLIP_Y);
-        const previewMesh = new THREE.Mesh(geometry, previewMaterial);
-        previewMesh.visible = true;
-        this.el.setObject3D("preview", previewMesh);
+    //TODO these visuals need work
 
-        const Mesh = this.el.getObject3D("preview");
-        Mesh.material.map = null;
-        Mesh.material.needsUpdate = true;
-        Mesh.visible = true;
-        */
+    var cylinderRadius = this.data.bounds.x > this.data.bounds.z? this.data.bounds.x : this.data.bounds.z;
+
+    this.el.setObject3D(
+      "guide",
+      new THREE.Mesh(
+        new THREE.CylinderGeometry(cylinderRadius, cylinderRadius, this.data.bounds.y, 24 ),
+        new THREE.ShaderMaterial({
+          uniforms: {
+            color: { value: new THREE.Color(0x6d9be3) }
+          },
+          vertexShader: `
+            varying vec2 vUv;
+            void main()
+            {
+              gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+              vUv = uv;
+            }
+          `,
+          fragmentShader: `
+            // adapted from https://www.shadertoy.com/view/Mlt3z8
+            float bayerDither2x2( vec2 v ) {
+              return mod( 3.0 * v.y + 2.0 * v.x, 4.0 );
+            }
+            float bayerDither4x4( vec2 v ) {
+              vec2 P1 = mod( v, 2.0 );
+              vec2 P2 = mod( floor( 0.5  * v ), 2.0 );
+              return 4.0 * bayerDither2x2( P1 ) + bayerDither2x2( P2 );
+            }
+
+            varying vec2 vUv;
+            uniform vec3 color;
+            void main() {
+              float alpha = (1.0-vUv.y)-0.5;
+              if( ( bayerDither4x4( floor( mod( gl_FragCoord.xy, 4.0 ) ) ) ) / 32.0 >= alpha ) discard;
+              gl_FragColor = vec4(color, 1.0);
+            }
+          `,
+          side: THREE.DoubleSide
+        })
+      )
+    );
       },
       initState: function()
       {
@@ -120,14 +108,14 @@ AFRAME.registerComponent('trigger', {
           case ACTIONS.AUDIOZONE	:
             break; 
           case ACTIONS.CHANGE_ROOM	:
+            this.setBorder();
             break; 
           }
       },
       initVariables: function()
       {
-        //console.log("trigger initVariables", this.data);
-
-        this.data.bounds = new THREE.Vector3(1, 1, 1) ;
+        this.data.bounds.x = this.data.bounds.x / 2;
+        this.data.bounds.z = this.data.bounds.z / 2;
         this.data.avatar = document.querySelector("#avatar-rig");
         this.data.physicsSystem = this.el.sceneEl.systems["hubs-systems"].physicsSystem;
         this.data.uuid = this.el.components["body-helper"].uuid;

@@ -170,7 +170,7 @@ AFRAME.GLTFModelPlus.registerComponent("media-frame", "media-frame", (el, compon
 
 AFRAME.GLTFModelPlus.registerComponent("frame-trigger", "frame-trigger", (el, componentName, componentData, components) => {
   //console.log("GLTFModelPlus frame-trigger el", el);
-  console.log("GLTFModelPlus frame-trigger componentData", componentData);
+  //console.log("GLTFModelPlus frame-trigger componentData", componentData);
 
   el.setAttribute("networked", {
     template: "#interactable-frame-trigger",
@@ -187,8 +187,7 @@ AFRAME.GLTFModelPlus.registerComponent("frame-trigger", "frame-trigger", (el, co
       y: componentData.bounds.y / 2,
       z: componentData.bounds.z / 2
     }
-  });  
-
+  });
   el.setAttribute("trigger", componentData);
 });
 
