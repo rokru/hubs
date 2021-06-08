@@ -37,8 +37,6 @@ AFRAME.registerComponent('trigger', {
         try
         {
           this.CheckCollidingObjects();
-
-          console.log("number of elements in trigger", this.data.elementsInTrigger.length);
         }
         catch(e)
         {
