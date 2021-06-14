@@ -161,7 +161,7 @@ class UIRoot extends Component {
     onLoaded: PropTypes.func,
     activeObject: PropTypes.object,
     selectedObject: PropTypes.object,
-    breakpoint: PropTypes.string
+    breakpoint: PropTypes.string,
   };
 
   state = {
@@ -195,7 +195,7 @@ class UIRoot extends Component {
 
     objectInfo: null,
     objectSrc: "",
-    sidebarId: null
+    sidebarId: null,
   };
 
   constructor(props) {
@@ -559,6 +559,15 @@ class UIRoot extends Component {
     this.mediaDevicesManager.startMicShare(deviceId);
   };
 
+  onDataPolicyAcceptedChanged()
+  {
+    this.state.acceptedDataPolicy = !this.state.acceptedDataPolicy;
+    
+    this.props.store.update({ preferences: { acceptedDataPolicy: this.state.acceptedDataPolicy } });
+    var acceptedDataPolicyStore = this.props.store.state.preferences["acceptedDataPolicy"];
+    console.log("ui-root onDataPolicyAcceptedChanged", acceptedDataPolicyStore);
+  }
+
   onRequestMicPermission = async () => {
     // TODO: Show an error state if getting the microphone permissions fails
     await this.mediaDevicesManager.startLastUsedMicShare();
@@ -785,6 +794,8 @@ class UIRoot extends Component {
           appName={configs.translation("app-name")}
           logoSrc={configs.image("logo")}
           roomName={this.props.hub.name}
+          acceptedDataPolicy={this.props.store.state.preferences["acceptedDataPolicy"]}
+          onDataPolicyAcceptedChanged = {() => this.onDataPolicyAcceptedChanged()}
           showJoinRoom={!this.state.waitingOnAudio && !this.props.entryDisallowed}
           onJoinRoom={() => {
             if (promptForNameAndAvatarBeforeEntry || !this.props.forcedVREntryType) {

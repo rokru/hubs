@@ -12,12 +12,15 @@ import styleUtils from "../styles/style-utils.scss";
 import { useCssBreakpoints } from "react-use-css-breakpoints";
 import { Column } from "../layout/Column";
 import { FormattedMessage } from "react-intl";
+import { SelectInputField } from "../input/SelectInputField";
+import { ToggleInput } from "../input/ToggleInput";
 
 export function RoomEntryModal({
   appName,
   logoSrc,
   className,
   roomName,
+  acceptedDataPolicy,
   showJoinRoom,
   onJoinRoom,
   showEnterOnDevice,
@@ -26,6 +29,7 @@ export function RoomEntryModal({
   onSpectate,
   showOptions,
   onOptions,
+  onDataPolicyAcceptedChanged,
   ...rest
 }) {
   const breakpoint = useCssBreakpoints();
@@ -45,15 +49,15 @@ export function RoomEntryModal({
           <p>{roomName}</p>
         </div>
         <Column center className={styles.buttons}>
-          {showJoinRoom && (
+          {showJoinRoom && acceptedDataPolicy && (
             <Button preset="accent4" onClick={onJoinRoom}>
               <EnterIcon />
-              <span>
+              <span> 
                 <FormattedMessage id="room-entry-modal.join-room-button" defaultMessage="Join Room" />
               </span>
             </Button>
           )}
-          {showEnterOnDevice && (
+          {showEnterOnDevice && acceptedDataPolicy && (
             <Button preset="accent5" onClick={onEnterOnDevice}>
               <VRIcon />
               <span>
@@ -61,7 +65,7 @@ export function RoomEntryModal({
               </span>
             </Button>
           )}
-          {showSpectate && (
+          {showSpectate && acceptedDataPolicy && (
             <Button preset="accent2" onClick={onSpectate}>
               <ShowIcon />
               <span>
@@ -69,6 +73,12 @@ export function RoomEntryModal({
               </span>
             </Button>
           )}
+          <a></a>
+            <ToggleInput
+              label={<a href="https://www.fh-erfurt.de/fhe/impressum/datenschutz/" target="_blank"> <FormattedMessage id="room-entry-modal.accept-data-policy" defaultMessage="Accept Data Policy" /></a>}
+              checked={acceptedDataPolicy}
+              onChange={onDataPolicyAcceptedChanged}
+            />
           {showOptions &&
             breakpoint !== "sm" && (
               <>
@@ -92,6 +102,7 @@ RoomEntryModal.propTypes = {
   logoSrc: PropTypes.string,
   className: PropTypes.string,
   roomName: PropTypes.string.isRequired,
+  acceptedDataPolicy: PropTypes.bool,
   showJoinRoom: PropTypes.bool,
   onJoinRoom: PropTypes.func,
   showEnterOnDevice: PropTypes.bool,
@@ -99,10 +110,12 @@ RoomEntryModal.propTypes = {
   showSpectate: PropTypes.bool,
   onSpectate: PropTypes.func,
   showOptions: PropTypes.bool,
-  onOptions: PropTypes.func
+  onOptions: PropTypes.func,
+  onDataPolicyAcceptedChanged: PropTypes.func
 };
 
 RoomEntryModal.defaultProps = {
+  acceptedDataPolicy: false,
   showJoinRoom: true,
   showEnterOnDevice: true,
   showSpectate: true,
