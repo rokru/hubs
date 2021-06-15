@@ -49,24 +49,24 @@ export function RoomEntryModal({
           <p>{roomName}</p>
         </div>
         <Column center className={styles.buttons}>
-          {showJoinRoom && acceptedDataPolicy && (
-            <Button preset="accent4" onClick={onJoinRoom}>
+          {showJoinRoom && (
+            <Button preset="accent4" onClick={onJoinRoom} disabled={!acceptedDataPolicy}>
               <EnterIcon />
               <span> 
                 <FormattedMessage id="room-entry-modal.join-room-button" defaultMessage="Join Room" />
               </span>
             </Button>
           )}
-          {showEnterOnDevice && acceptedDataPolicy && (
-            <Button preset="accent5" onClick={onEnterOnDevice}>
+          {showEnterOnDevice &&  (
+            <Button preset="accent5" onClick={onEnterOnDevice} disabled={!acceptedDataPolicy}>
               <VRIcon />
               <span>
                 <FormattedMessage id="room-entry-modal.enter-on-device-button" defaultMessage="Enter On Device" />
               </span>
             </Button>
           )}
-          {showSpectate && acceptedDataPolicy && (
-            <Button preset="accent2" onClick={onSpectate}>
+          {showSpectate && (
+            <Button preset="accent2" onClick={onSpectate} disabled={!acceptedDataPolicy}>
               <ShowIcon />
               <span>
                 <FormattedMessage id="room-entry-modal.spectate-button" defaultMessage="Spectate" />

@@ -402,7 +402,7 @@
   "room-entry-modal.options-button": "Optionen",
   "room-entry-modal.room-name-label": "Raumname",
   "room-entry-modal.spectate-button": "Zuschauen",
-  "room-entry-modal.accept-data-policy": "Datenschutz akzeptieren",
+  "room-entry-modal.accept-data-policy": "Datenschutzerklärung akzeptieren",
   "room-settings-sidebar.access-invite": "Nur mit Einladung",
   "room-settings-sidebar.access-invite-description": "Einladen von Personen mit einem Link, der widerrufen werden kann",
   "room-settings-sidebar.access-public": "Public",
