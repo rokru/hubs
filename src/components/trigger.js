@@ -322,6 +322,7 @@ AFRAME.registerComponent('trigger', {
         }
 
         const position = document.querySelector("."+targetClassName);
+        console.log("trigger teleport position", position);
 
         if(element.className=="AvatarRoot" || element.className=="Head")
         {

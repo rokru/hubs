@@ -75,7 +75,7 @@ export function RoomEntryModal({
           )}
           <a></a>
             <ToggleInput
-              label={<a href="https://www.fh-erfurt.de/fhe/impressum/datenschutz/" target="_blank"> <FormattedMessage id="room-entry-modal.accept-data-policy" defaultMessage="Accept Data Policy" /></a>}
+              label={<a href="https://www.ai.fh-erfurt.de/ill/virtuelle-raeume" target="_blank"> <FormattedMessage id="room-entry-modal.accept-data-policy" defaultMessage="Accept Data Policy" /></a>}
               checked={acceptedDataPolicy}
               onChange={onDataPolicyAcceptedChanged}
             />
