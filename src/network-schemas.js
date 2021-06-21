@@ -191,7 +191,8 @@ function registerNetworkSchemas() {
       {
         component: "media-video",
         property: "time"
-      }
+      },
+      "visible"
     ],
     nonAuthorizedComponents: [
       {
