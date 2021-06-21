@@ -221,7 +221,7 @@ AFRAME.registerComponent('trigger', {
             this.changeVisibility(element, false);
             break;
           case ACTIONS.MEGAPHONE:
-            if(NAF.utils.isMine(element.el))
+            if(NAF.utils.isMine(element))
             {
               this.changeMegaphone(true);
             }
