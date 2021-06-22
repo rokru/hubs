@@ -10,6 +10,7 @@ export const ACTIONS ={
   SNAP: "snap",
   AUDIOZONE: "audiozone",
   CHANGE_ROOM: "Change Room",
+  SCALE: "Scale",
 };
 
 AFRAME.registerComponent('trigger', {
@@ -23,6 +24,7 @@ AFRAME.registerComponent('trigger', {
     switchActive: { type: "boolean", default: true},
     targetName: { default: "target" },
     triggerType: { default: "none" },
+    size: { default: 0.1 },
     newRoomUrl: { default: "" },
     elementsInTrigger: { default: []},
       },
@@ -45,8 +47,6 @@ AFRAME.registerComponent('trigger', {
       },
       setBorder: function()
       {
-    //TODO these visuals need work
-
     var cylinderRadius = this.data.bounds.x > this.data.bounds.z? this.data.bounds.x : this.data.bounds.z;
 
     this.el.setObject3D(
@@ -110,6 +110,8 @@ AFRAME.registerComponent('trigger', {
           case ACTIONS.CHANGE_ROOM	:
             this.setBorder();
             break; 
+          case ACTIONS.SCALE	:
+            break; 
           }
       },
       initVariables: function()
@@ -122,6 +124,10 @@ AFRAME.registerComponent('trigger', {
         this.data.elementsInTrigger = [];
         this.data.targetName = this.data.targetName.replaceAll(" ", "_");
         this.data.newRoomUrl = this.data.newRoomUrl != "" ? this.data.newRoomUrl : window.location.href;
+      
+      //###############DEBUG####################
+      //this.data.triggerType = ACTIONS.SCALE;
+      //########################################
       },
       setupCollisionGroup: function()
       {
@@ -151,7 +157,10 @@ AFRAME.registerComponent('trigger', {
               break; 
             case ACTIONS.CHANGE_ROOM	:
               collisionMask = 4;
-              break;             
+              break;  
+            case ACTIONS.SCALE	:
+              collisionMask = 5;
+              break;               
             }
         this.el.setAttribute("body-helper", {collisionFilterMask:this.data.cMask})
       } ,     
@@ -241,6 +250,9 @@ AFRAME.registerComponent('trigger', {
               this.enterNewRoom();
             }
             break;
+          case ACTIONS.SCALE:
+            this.scale(element, this.data.size);
+            break;
         }
       },
       onTriggerLeft: function(element)
@@ -272,6 +284,9 @@ AFRAME.registerComponent('trigger', {
             this.setAudioZone(element, 0);
             break;
           case ACTIONS.CHANGE_ROOM:
+            break;
+          case ACTIONS.SCALE:
+            this.scale(element, 1.0);
             break;
         }
       },
@@ -322,6 +337,7 @@ AFRAME.registerComponent('trigger', {
         }
 
         const position = document.querySelector("."+targetClassName);
+        console.log("trigger teleport targetClassName", targetClassName);
         console.log("trigger teleport position", position);
 
         if(element.className=="AvatarRoot" || element.className=="Head")
@@ -374,6 +390,24 @@ AFRAME.registerComponent('trigger', {
         {
           window.open(this.data.newRoomUrl,"_self");
         }
+      },
+      scale: function(element, size)
+      {
+        if(!NAF.utils.isMine(element))
+        {
+            return;
+        }
+
+        console.log("trigger scale element", element);
+
+        if(element.className=="AvatarRoot" || element.className=="Head")
+        {
+          element = this.data.avatar;
+        }
+
+        element.object3D.scale.set(size, size, size);
+        element.object3D.matrixNeedsUpdate = true;
+
       },
       isColliding: function(entityA, entityB) {
         const bodyAUUID = entityA.components["body-helper"].uuid;
