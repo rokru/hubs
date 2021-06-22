@@ -95,6 +95,7 @@ AFRAME.registerComponent('trigger', {
         switch(this.data.triggerType)
         {
           case ACTIONS.TELEPORT:
+            this.setBorder();
             break;
           case ACTIONS.VISIBLE:
             break;
@@ -110,7 +111,7 @@ AFRAME.registerComponent('trigger', {
           case ACTIONS.CHANGE_ROOM	:
             this.setBorder();
             break; 
-          case ACTIONS.SCALE	:
+            case ACTIONS.SCALE	:
             break; 
           }
       },
@@ -219,7 +220,7 @@ AFRAME.registerComponent('trigger', {
       },
       onTriggerEnter: function(element)
       {
-        console.log("trigger onTriggerEnter", element);
+        //console.log("trigger onTriggerEnter", element);
 
         switch(this.data.triggerType)
         {
@@ -257,7 +258,7 @@ AFRAME.registerComponent('trigger', {
       },
       onTriggerLeft: function(element)
       {
-        console.log("trigger onTriggerLeft", element);
+        //console.log("trigger onTriggerLeft", element);
 
         switch(this.data.triggerType)
         {
@@ -337,17 +338,17 @@ AFRAME.registerComponent('trigger', {
         }
 
         const position = document.querySelector("."+targetClassName);
-        console.log("trigger teleport targetClassName", targetClassName);
-        console.log("trigger teleport position", position);
+        //console.log("trigger teleport targetClassName", targetClassName);
+        //console.log("trigger teleport position", position);
 
         if(element.className=="AvatarRoot" || element.className=="Head")
         {
           element = this.data.avatar;
 
-          //this.el.sceneEl.systems["hubs-systems"].characterController.teleportTo(position.object3D.position);
+          let isInstant = true;
           this.el.sceneEl.systems["hubs-systems"].characterController.enqueueWaypointTravelTo(
             position.object3D.matrixWorld,
-            false,
+            isInstant,
             {willDisableMotion: false}
           );
         }
@@ -384,7 +385,7 @@ AFRAME.registerComponent('trigger', {
       },
       enterNewRoom: function()
       {
-        console.log("enterNewRoom", this.data.newRoomUrl);
+        //console.log("enterNewRoom", this.data.newRoomUrl);
 
         if(this.data.newRoomUrl != "" && this.data.newRoomUrl != null)
         {
@@ -398,7 +399,7 @@ AFRAME.registerComponent('trigger', {
             return;
         }
 
-        console.log("trigger scale element", element);
+        //console.log("trigger scale element", element);
 
         if(element.className=="AvatarRoot" || element.className=="Head")
         {
