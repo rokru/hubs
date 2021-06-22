@@ -312,9 +312,11 @@ AFRAME.registerComponent('trigger', {
       },
       switchVisibility: function(isVisible)
       {
-        //console.log("trigger switchVisibility", isVisible);
-
+        console.log("trigger switchVisibility", isVisible);
+        
         let targetName = document.querySelector("."+this.data.targetName);
+        
+        console.log("trigger switchVisibility targetName", targetName);
                
         if(targetName)
         {
