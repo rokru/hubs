@@ -252,7 +252,7 @@ AFRAME.registerComponent('trigger', {
             }
             break;
           case ACTIONS.SCALE:
-            this.scale(element, this.data.size);
+            this.scale(element, true);
             break;
         }
       },
@@ -287,7 +287,7 @@ AFRAME.registerComponent('trigger', {
           case ACTIONS.CHANGE_ROOM:
             break;
           case ACTIONS.SCALE:
-            this.scale(element, 1.0);
+            this.scale(element, false);
             break;
         }
       },
@@ -394,18 +394,22 @@ AFRAME.registerComponent('trigger', {
           window.open(this.data.newRoomUrl,"_self");
         }
       },
-      scale: function(element, size)
+      scale: function(element, isScaled)
       {
         if(!NAF.utils.isMine(element))
         {
             return;
         }
 
+        var size = isScaled ? this.data.size : 1.0;
+
         //console.log("trigger scale element", element);
 
         if(element.className=="AvatarRoot" || element.className=="Head")
         {
           element = this.data.avatar;
+          this.el.sceneEl.systems["personal-space-bubble"].data.enabled = !isScaled;
+          this.el.sceneEl.systems["personal-space-bubble"].update();
         }
 
         element.object3D.scale.set(size, size, size);
