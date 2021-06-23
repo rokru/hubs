@@ -191,6 +191,7 @@ AFRAME.registerComponent("teleporter", {
     const userinput = AFRAME.scenes[0].systems.userinput;
     const { start, confirm, speed } = this.data;
     const object3D = this.el.object3D;
+    const playerScale = v.setFromMatrixColumn(this.characterController.avatarPOV.object3D.matrixWorld, 1).length();
 
     if (
       !this.isTeleporting &&
@@ -201,12 +202,14 @@ AFRAME.registerComponent("teleporter", {
       this.isTeleporting = true;
       this.timeTeleporting = 0;
       this.hit = false;
+      this.rayCurve.width = playerScale*0.025;
       this.rayCurve.mesh.visible = true;
       this.rayCurve.mesh.updateMatrixWorld();
       this.rayCurve.mesh.material.opacity = MISS_OPACITY;
       this.rayCurve.mesh.material.color.set(MISS_COLOR);
       this.rayCurve.mesh.material.needsUpdate = true;
       this.teleportingSound = sfx.playSoundLoopedWithGain(SOUND_TELEPORT_START);
+      this.hitEntity.object3D.scale.set(playerScale, playerScale, playerScale);
       if (this.teleportingSound) {
         this.teleportingSound.gain.gain.value = 0.005;
       }
@@ -247,7 +250,6 @@ AFRAME.registerComponent("teleporter", {
       .normalize();
     this.rayCurve.setDirection(this.direction);
     this.el.object3D.updateMatrices();
-    const playerScale = v.setFromMatrixColumn(this.characterController.avatarPOV.object3D.matrixWorld, 1).length();
     this.v0.copy(this.direction).multiplyScalar(speed * Math.sqrt(playerScale));
 
     let collidedIndex = this.rayCurve.numPoints - 1;
@@ -310,7 +312,7 @@ AFRAME.registerComponent("teleporter", {
     }
   },
 
-  createHitEntity() {
+  createHitEntity(sizeMultiplier=1.0) {
     const data = this.data;
 
     // Parent.
@@ -321,10 +323,10 @@ AFRAME.registerComponent("teleporter", {
     this.torus = document.createElement("a-entity");
     this.torus.setAttribute("geometry", {
       primitive: "torus",
-      radius: data.hitCylinderRadius,
-      radiusTubular: 0.01,
-      segmentsRadial: 16,
-      segmentsTubular: 18
+      radius: data.hitCylinderRadius*sizeMultiplier,
+      radiusTubular: 0.01*sizeMultiplier,
+      segmentsRadial: 16*sizeMultiplier,
+      segmentsTubular: 18*sizeMultiplier
     });
     this.torus.setAttribute("rotation", { x: 90, y: 0, z: 0 });
     this.torus.setAttribute("material", {
@@ -337,12 +339,12 @@ AFRAME.registerComponent("teleporter", {
 
     // Cylinder.
     this.cylinder = document.createElement("a-entity");
-    this.cylinder.setAttribute("position", { x: 0, y: data.hitCylinderHeight / 2, z: 0 });
+    this.cylinder.setAttribute("position", { x: 0, y: data.hitCylinderHeight*sizeMultiplier / 2, z: 0 });
     this.cylinder.setAttribute("geometry", {
       primitive: "cylinder",
       segmentsHeight: 1,
-      radius: data.hitCylinderRadius,
-      height: data.hitCylinderHeight,
+      radius: data.hitCylinderRadius*sizeMultiplier,
+      height: data.hitCylinderHeight*sizeMultiplier,
       openEnded: true
     });
     this.cylinder.setAttribute("material", {
@@ -359,9 +361,9 @@ AFRAME.registerComponent("teleporter", {
     this.outerTorus = document.createElement("a-entity");
     this.outerTorus.setAttribute("geometry", {
       primitive: "torus",
-      radius: data.outerRadius,
-      radiusTubular: 0.01,
-      segmentsRadial: 16,
+      radius: data.outerRadius*sizeMultiplier,
+      radiusTubular: 0.01*sizeMultiplier,
+      segmentsRadial: 16*sizeMultiplier,
       segmentsTubular: 18
     });
     this.outerTorus.setAttribute("rotation", { x: 90, y: 0, z: 0 });

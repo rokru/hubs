@@ -401,14 +401,14 @@ AFRAME.registerComponent('trigger', {
             return;
         }
 
-        var size = isScaled ? this.data.size : 1.0;
+        var size = isScaled ? this.data.size : 0.9;
 
         //console.log("trigger scale element", element);
 
         if(element.className=="AvatarRoot" || element.className=="Head")
         {
           element = this.data.avatar;
-          
+
           if(this.data.size < 0.5)
           {
             this.el.sceneEl.systems["personal-space-bubble"].data.enabled = !isScaled;
