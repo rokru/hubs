@@ -408,8 +408,12 @@ AFRAME.registerComponent('trigger', {
         if(element.className=="AvatarRoot" || element.className=="Head")
         {
           element = this.data.avatar;
-          this.el.sceneEl.systems["personal-space-bubble"].data.enabled = !isScaled;
-          this.el.sceneEl.systems["personal-space-bubble"].update();
+          
+          if(this.data.size < 0.5)
+          {
+            this.el.sceneEl.systems["personal-space-bubble"].data.enabled = !isScaled;
+            this.el.sceneEl.systems["personal-space-bubble"].update();
+          }
         }
 
         element.object3D.scale.set(size, size, size);
