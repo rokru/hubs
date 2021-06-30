@@ -170,25 +170,40 @@ AFRAME.GLTFModelPlus.registerComponent("media-frame", "media-frame", (el, compon
 
 AFRAME.GLTFModelPlus.registerComponent("frame-trigger", "frame-trigger", (el, componentName, componentData, components) => {
   //console.log("GLTFModelPlus frame-trigger el", el);
-  console.log("GLTFModelPlus frame-trigger componentData", componentData);
-
-  el.setAttribute("networked", {
-    template: "#interactable-frame-trigger",
-    owner: "scene",
-    persistent: true,
-    networkId: components.networked.id
-  });
+  //console.log("GLTFModelPlus frame-trigger componentData", componentData);
   
-  el.setAttribute("shape-helper", {
-    type: "box",
-    fit: "manual",
-    halfExtents: {
-      x: componentData.bounds.x / 2,
-      y: componentData.bounds.y / 2,
-      z: componentData.bounds.z / 2
-    }
-  });
-  el.setAttribute("trigger", componentData);
+  if(componentData.triggerType =="switch active")
+  {
+    el.setAttribute("networked", {
+      template: "#switch-button",
+      owner: "scene",
+      persistent: true,
+      networkId: components.networked.id
+    });
+  }
+  else
+  {
+    el.setAttribute("networked", {
+      template: "#interactable-frame-trigger",
+      owner: "scene",
+      persistent: true,
+      networkId: components.networked.id
+    });
+    
+    el.setAttribute("shape-helper", {
+      type: "box",
+      fit: "manual",
+      halfExtents: {
+        x: componentData.bounds.x / 2,
+        y: componentData.bounds.y / 2,
+        z: componentData.bounds.z / 2
+      }
+    });
+
+    el.setAttribute("trigger", componentData);
+  }
+
+
 });
 
 AFRAME.GLTFModelPlus.registerComponent("media", "media", (el, componentName, componentData) => {

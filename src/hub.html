@@ -600,8 +600,26 @@
                 -->
                 <a-entity  
                 body-helper="type: kinematic; collisionFilterGroup: 16; collisionFilterMask: 13; disableCollision: true;" >
-            </a-entity>
+                </a-entity>
 
+            </template>
+
+            
+            <template id="switch-button">
+                <a-entity >
+                    <a-entity 
+                    billboard
+                    class="ui" 
+                    visible="true" 
+                    mixin="rounded-text-action-button ui" 
+                    is-remote-hover-target 
+                    tags="singleActionButton: true;" 
+                    action-button=""
+                    scale="1.0 1.0 1.0" 
+                    position="0 0 0">
+                        <a-entity text="width:1.5; align:center;" text-raycast-hack position="0 0 0.02"></a-entity>
+                    </a-entity>
+                </a-entity>
             </template>
 
             <template id="linked-media">
