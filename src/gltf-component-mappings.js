@@ -180,6 +180,13 @@ AFRAME.GLTFModelPlus.registerComponent("frame-trigger", "frame-trigger", (el, co
       persistent: true,
       networkId: components.networked.id
     });
+  
+    el.querySelector(".action-button").setAttribute("action-button", {
+      target: componentData.targetName,
+      textLabel: componentData.triggerType,
+      buttonType: "switch visibility",
+      isSwitchButton: true,
+    });
   }
   else
   {

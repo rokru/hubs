@@ -18,12 +18,20 @@ AFRAME.registerComponent("action-button", {
     target: { default: "" },
   },
   init() {
-    this.initVariables();
-    this.initButtonText();
+    this.el.sceneEl.addEventListener('model-loaded', ()=>{
+      this.initVariables();
+      this.initButtonText();
+    });
+  },
+  tick()
+  {
+
   },
   initVariables()
   {
+    console.log("action-button init element", this.el);
     this.data.textElement = this.el.querySelector("[text]");
+    console.log("action-button textElement", this.data.textElement);
     this.data.target = this.data.target != "" ? document.querySelector("."+this.data.target): "";
     this.data.avatar = document.querySelector("#avatar-rig");
   },
