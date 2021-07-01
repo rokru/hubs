@@ -166,7 +166,21 @@ function registerNetworkSchemas() {
       }
     ]
   });
-
+/*
+    NAF.schemas.add({
+    template: "#button-template",
+    components: [
+      {
+        component: "action-button",
+        property: "textLabel"
+      },
+      {
+        component: "action-button",
+        property: "buttonStatus"
+      },
+    ]
+  });
+*/
   NAF.schemas.add({
     template: "#interactable-media-frame",
     components: [
@@ -207,6 +221,7 @@ function registerNetworkSchemas() {
     components: [
       // TODO: Optimize checking mediaOptions with requiresNetworkUpdate.
       "media-loader",
+      "visible",
       {
         component: "media-video",
         property: "time"

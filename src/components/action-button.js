@@ -8,8 +8,9 @@ export const ACTIONS ={
 
 AFRAME.registerComponent("action-button", {
   schema: {
+    isInitialized: {default: false},
     textElement: {default: null},
-    textLabel: { default:"Klick"},
+    textLabel: { default:""},
     avatar: { default: "" },
     buttonType: { default: ACTIONS.NONE },
     buttonStatus: { default: false },
@@ -19,26 +20,42 @@ AFRAME.registerComponent("action-button", {
   },
   init() {
     this.el.sceneEl.addEventListener('model-loaded', ()=>{
-      this.initVariables();
-      this.initButtonText();
+      if(!this.isInitialized)
+      {
+        this.isInitialized = true;
+        this.initVariables();
+        this.initButtonText();
+      }
     });
-  },
-  tick()
-  {
-
   },
   initVariables()
   {
-    console.log("action-button init element", this.el);
     this.data.textElement = this.el.querySelector("[text]");
-    console.log("action-button textElement", this.data.textElement);
-    this.data.target = this.data.target != "" ? document.querySelector("."+this.data.target): "";
+    this.data.target = this.data.target.replaceAll(" ", "_");
+    this.data.target = this.data.target ? document.querySelector("."+this.data.target): "";
+    
     this.data.avatar = document.querySelector("#avatar-rig");
+
+    switch(this.data.buttonType)
+      {
+        case ACTIONS.TELEPORT:
+          break;
+        case ACTIONS.MEGAPHONE:
+          break;
+        case ACTIONS.SWITCH_VISIBLITY:
+          this.data.buttonStatus = this.data.target.object3D.visible;
+          break; 
+        case ACTIONS.CHANGE_ROOM:
+          break; 
+        case ACTIONS.NONE:
+          break; 
+      }
   },
   initButtonText()
   {
-    this.data.textElement.setAttribute("text", "value:"+this.data.textLabel);
-  },
+    let text = (this.data.textLabel? (this.data.textLabel+"\n "):"")+ (this.data.buttonStatus?"Aus":"An");
+    this.data.textElement.setAttribute("text", "value:"+text);
+   },
   play() {
     this.el.object3D.addEventListener("interact", this.onButtonPressed.bind(this));
   },
@@ -47,29 +64,36 @@ AFRAME.registerComponent("action-button", {
   },
   onButtonPressed()
   {
-    console.log("action-button onButtonPressed");
+    try
+    { 
+      if(this.data.isSwitchButton)
+      {
+        this.data.buttonStatus = !this.data.buttonStatus;
+      }
 
-    if(this.data.isSwitchButton)
-    {
-      this.data.buttonStatus = !this.data.buttonStatus;
+      this.initButtonText();
+  
+      switch(this.data.buttonType)
+      {
+        case ACTIONS.TELEPORT:
+          this.teleport();
+          break;
+        case ACTIONS.MEGAPHONE:
+          this.changeMegaphone(this.data.buttonStatus);
+          break;
+        case ACTIONS.SWITCH_VISIBLITY	:
+          this.changeVisibility(this.data.buttonStatus);
+          break; 
+        case ACTIONS.CHANGE_ROOM	:
+          this.enterNewRoom();
+          break; 
+        case ACTIONS.NONE	:
+          break; 
+      }
     }
-
-    switch(this.data.buttonType)
+    catch(error)
     {
-      case ACTIONS.TELEPORT:
-        this.teleport();
-        break;
-      case ACTIONS.MEGAPHONE:
-        this.changeMegaphone(this.data.buttonStatus);
-        break;
-      case ACTIONS.SWITCH_VISIBLITY	:
-        this.changeVisibility(this.data.buttonStatus);
-        break; 
-      case ACTIONS.CHANGE_ROOM	:
-        this.enterNewRoom();
-        break; 
-      case ACTIONS.NONE	:
-        break; 
+      console.error(error);
     }
   },
   teleport: function()

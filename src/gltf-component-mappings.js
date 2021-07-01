@@ -175,15 +175,17 @@ AFRAME.GLTFModelPlus.registerComponent("frame-trigger", "frame-trigger", (el, co
   if(componentData.triggerType =="switch active")
   {
     el.setAttribute("networked", {
-      template: "#switch-button",
+      template: "#button-template",
       owner: "scene",
       persistent: true,
       networkId: components.networked.id
     });
-  
+    
+    console.log("GLTFModelPlus switch active targetName", componentData.targetName);
+
     el.querySelector(".action-button").setAttribute("action-button", {
       target: componentData.targetName,
-      textLabel: componentData.triggerType,
+      textLabel: componentData.targetName,
       buttonType: "switch visibility",
       isSwitchButton: true,
     });

@@ -605,18 +605,19 @@
             </template>
 
             
-            <template id="switch-button">
-                <a-entity >
+            <template id="button-template">
+                <a-entity>
                     <a-entity 
                     billboard
                     class="ui action-button" 
                     visible="true" 
-                    mixin="rounded-text-action-button ui" 
+                    mixin="rounded-action-button ui" 
                     is-remote-hover-target 
                     tags="singleActionButton: true;" 
                     scale="1.0 1.0 1.0" 
-                    position="0 0 0">
-                        <a-entity text="value:no init; width:1.5; align:center;" text-raycast-hack position="0 0 0.02"></a-entity>
+                    position="0 0 0"
+                    >
+                        <a-entity text="value:no init; width:1.0; align:center;" text-raycast-hack position="0 0 0.02"></a-entity>
                     </a-entity>
                 </a-entity>
             </template>
