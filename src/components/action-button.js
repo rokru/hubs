@@ -28,6 +28,10 @@ AFRAME.registerComponent("action-button", {
       }
     });
   },
+  tick()
+  {
+    //this.initButtonText();
+  },
   initVariables()
   {
     this.data.textElement = this.el.querySelector("[text]");
@@ -66,6 +70,8 @@ AFRAME.registerComponent("action-button", {
   {
     try
     { 
+      NAF.utils.takeOwnership(this.el);
+
       if(this.data.isSwitchButton)
       {
         this.data.buttonStatus = !this.data.buttonStatus;

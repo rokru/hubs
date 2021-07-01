@@ -166,21 +166,23 @@ function registerNetworkSchemas() {
       }
     ]
   });
-/*
+
     NAF.schemas.add({
     template: "#button-template",
     components: [
       {
+        selector: '.action-button',
         component: "action-button",
         property: "textLabel"
       },
       {
+        selector: '.action-button',
         component: "action-button",
         property: "buttonStatus"
       },
-    ]
+    ],
   });
-*/
+
   NAF.schemas.add({
     template: "#interactable-media-frame",
     components: [
