@@ -6,8 +6,6 @@ export const ACTIONS ={
   NONE: "None",
 };
 
-export const BUTTON_CLICKED_EVENT = "BUTTON_CLICKED_EVENT";
-
 AFRAME.registerComponent("action-button", {
   schema: {
     isInitialized: {default: false},
@@ -21,6 +19,8 @@ AFRAME.registerComponent("action-button", {
     target: { default: "" },
   },
   init() {
+    console.log(this.el);
+
     this.el.sceneEl.addEventListener('model-loaded', ()=>{
 
       if(!this.isInitialized)
@@ -28,8 +28,9 @@ AFRAME.registerComponent("action-button", {
         this.isInitialized = true;
         this.initVariables();
         this.initButtonText();
-        NAF.connection.subscribeToDataChannel(BUTTON_CLICKED_EVENT, 
+        NAF.connection.subscribeToDataChannel(this.el.parentElement.id, 
           (senderId, dataType, data, targetId)=>{
+          console.log("dataType", dataType);
           this.data.buttonStatus = data.buttonStatus;
           this.performAction();
         })
@@ -38,7 +39,6 @@ AFRAME.registerComponent("action-button", {
   },
   tick()
   {
-    //this.initButtonText();
   },
   initVariables()
   {
@@ -73,7 +73,8 @@ AFRAME.registerComponent("action-button", {
   },
   onButtonPressed()
   {
-    NAF.connection.broadcastData(BUTTON_CLICKED_EVENT, {buttonStatus: this.data.buttonStatus});
+    NAF.utils.takeOwnership(this.el);
+    NAF.connection.broadcastData(this.el.parentElement.id, {buttonStatus: this.data.buttonStatus});
     this.performAction();
   },
   performAction()
@@ -81,7 +82,6 @@ AFRAME.registerComponent("action-button", {
     console.log("action-button performAction");
     try
     { 
-      //NAF.utils.takeOwnership(this.el);
 
       if(this.data.isSwitchButton)
       {
