@@ -6,6 +6,8 @@ export const ACTIONS ={
   NONE: "None",
 };
 
+export const BUTTON_CLICKED_EVENT = "BUTTON_CLICKED_EVENT";
+
 AFRAME.registerComponent("action-button", {
   schema: {
     isInitialized: {default: false},
@@ -20,11 +22,17 @@ AFRAME.registerComponent("action-button", {
   },
   init() {
     this.el.sceneEl.addEventListener('model-loaded', ()=>{
+
       if(!this.isInitialized)
       {
         this.isInitialized = true;
         this.initVariables();
         this.initButtonText();
+        NAF.connection.subscribeToDataChannel(BUTTON_CLICKED_EVENT, 
+          (senderId, dataType, data, targetId)=>{
+          this.data.buttonStatus = data.buttonStatus;
+          this.performAction();
+        })
       }
     });
   },
@@ -63,14 +71,17 @@ AFRAME.registerComponent("action-button", {
   play() {
     this.el.object3D.addEventListener("interact", this.onButtonPressed.bind(this));
   },
-  pause() {
-    this.el.object3D.removeEventListener("interact", this.onButtonPressed.bind(this));
-  },
   onButtonPressed()
   {
+    NAF.connection.broadcastData(BUTTON_CLICKED_EVENT, {buttonStatus: this.data.buttonStatus});
+    this.performAction();
+  },
+  performAction()
+  {
+    console.log("action-button performAction");
     try
     { 
-      NAF.utils.takeOwnership(this.el);
+      //NAF.utils.takeOwnership(this.el);
 
       if(this.data.isSwitchButton)
       {
@@ -129,7 +140,7 @@ AFRAME.registerComponent("action-button", {
     {
       return;
     }
-    
+    console.log("action-button setAttribute", this.data.target.className+" "+isVisible);
     this.data.target.setAttribute("visible", isVisible);
   },
 });

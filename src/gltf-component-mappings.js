@@ -176,6 +176,8 @@ AFRAME.GLTFModelPlus.registerComponent("frame-trigger", "frame-trigger", (el, co
   {
     el.setAttribute("networked", {
       template: "#button-template",
+      owner: "scene",
+      persistent: true,
       networkId: components.networked.id
     });
     
