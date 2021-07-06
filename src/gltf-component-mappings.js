@@ -102,11 +102,19 @@ AFRAME.GLTFModelPlus.registerComponent(
   })()
 );
 AFRAME.GLTFModelPlus.registerComponent("visible", "visible", (el, componentName, componentData) => {
-  if (typeof componentData === "object") {
-    el.setAttribute(componentName, componentData.visible);
-  } else {
-    el.setAttribute(componentName, componentData);
-  }
+   
+  el.setAttribute("networked", {
+    template: "#visible-template",
+    owner: "scene",
+    persistent: true,
+    networkId: el.className,
+  });
+  
+    if (typeof componentData === "object") {
+      el.setAttribute("visible", componentData.visible);
+    } else {
+      el.setAttribute("visible", componentData);
+    }
 });
 AFRAME.GLTFModelPlus.registerComponent("spawn-point", "spawn-point", el => {
   el.setAttribute("waypoint", {
@@ -209,8 +217,6 @@ AFRAME.GLTFModelPlus.registerComponent("frame-trigger", "frame-trigger", (el, co
 
     el.setAttribute("trigger", componentData);
   }
-
-
 });
 
 AFRAME.GLTFModelPlus.registerComponent("media", "media", (el, componentName, componentData) => {

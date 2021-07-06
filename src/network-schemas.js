@@ -184,6 +184,24 @@ function registerNetworkSchemas() {
   });
 
   NAF.schemas.add({
+    template: "#visible-template",
+    components: [
+      "visible"
+    ],
+  });
+
+  NAF.schemas.add({
+    template: "#button-template",
+    components: [
+      {
+        component: "action-button",
+        property: "buttonStatus"        
+      }
+    ],
+  });
+
+
+  NAF.schemas.add({
     template: "#static-media",
     components: [
       // TODO: Optimize checking mediaOptions with requiresNetworkUpdate.

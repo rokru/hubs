@@ -19,8 +19,6 @@ AFRAME.registerComponent("action-button", {
     target: { default: "" },
   },
   init() {
-    console.log(this.el);
-
     this.el.sceneEl.addEventListener('model-loaded', ()=>{
 
       if(!this.isInitialized)
@@ -30,7 +28,6 @@ AFRAME.registerComponent("action-button", {
         this.initButtonText();
         NAF.connection.subscribeToDataChannel(this.el.parentElement.id, 
           (senderId, dataType, data, targetId)=>{
-          console.log("dataType", dataType);
           this.data.buttonStatus = data.buttonStatus;
           this.performAction();
         })
@@ -39,13 +36,13 @@ AFRAME.registerComponent("action-button", {
   },
   tick()
   {
+
   },
   initVariables()
   {
     this.data.textElement = this.el.querySelector("[text]");
     this.data.target = this.data.target.replaceAll(" ", "_");
     this.data.target = this.data.target ? document.querySelector("."+this.data.target): "";
-    
     this.data.avatar = document.querySelector("#avatar-rig");
 
     switch(this.data.buttonType)
@@ -55,7 +52,7 @@ AFRAME.registerComponent("action-button", {
         case ACTIONS.MEGAPHONE:
           break;
         case ACTIONS.SWITCH_VISIBLITY:
-          this.data.buttonStatus = this.data.target.object3D.visible;
+          this.data.buttonStatus = this.data.target?.object3D.visible;
           break; 
         case ACTIONS.CHANGE_ROOM:
           break; 
@@ -79,7 +76,6 @@ AFRAME.registerComponent("action-button", {
   },
   performAction()
   {
-    console.log("action-button performAction");
     try
     { 
 
@@ -140,7 +136,6 @@ AFRAME.registerComponent("action-button", {
     {
       return;
     }
-    console.log("action-button setAttribute", this.data.target.className+" "+isVisible);
     this.data.target.setAttribute("visible", isVisible);
   },
 });
