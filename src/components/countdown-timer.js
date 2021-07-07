@@ -135,8 +135,8 @@ AFRAME.registerComponent('countdown-timer', {
       },
       validateTime()
       {
-        this.data.hour = this.data.hour < 0 ? 0 : (this.data.hour > 99 ? 99 :this.data.hour);
-        this.data.minute = this.data.minute < 0 ? 0 : (this.data.minute > 59 ? 59 :this.data.minute);
-        this.data.second = this.data.second < 0 ? 0 : (this.data.second > 59 ? 59 :this.data.second);
+        this.data.hour = this.data.hour < 0 ? 99 : (this.data.hour > 99 ? 0 :this.data.hour);
+        this.data.minute = this.data.minute < 0 ? 59 : (this.data.minute > 59 ? 0 :this.data.minute);
+        this.data.second = this.data.second < 0 ? 59 : (this.data.second > 59 ? 0 :this.data.second);
       }
   });
