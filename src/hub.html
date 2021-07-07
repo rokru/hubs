@@ -628,6 +628,120 @@
                 </a-entity>
             </template>
 
+            <template id="countdown-timer-element">
+                <a-entity countdown-timer>
+                     <a-entity
+                        id="clock"
+                        text="width:3.0; align:center; color:black;">
+                    </a-entity>
+
+                    <a-entity 
+                    id="play-pause-button"
+                    class="ui" 
+                    visible="true" 
+                    mixin="rounded-action-button ui" 
+                    is-remote-hover-target 
+                    tags="singleActionButton: true;" 
+                    scale="1.0 1.0 1.0" 
+                    position="0.4 0 0"
+                    >
+                        <a-entity text="value:|>/II; width:1.0; align:center;" text-raycast-hack position="0 0 0.02"></a-entity>
+                    </a-entity>
+
+                    <a-entity 
+                    id="stop-button"
+                    class="ui" 
+                    visible="true" 
+                    mixin="rounded-action-button ui" 
+                    is-remote-hover-target 
+                    tags="singleActionButton: true;" 
+                    scale="1.0 1.0 1.0" 
+                    position="-0.4 0 0"
+                    >
+                        <a-entity text="value:Stop; width:1.0; align:center;" text-raycast-hack position="0 0 0.02"></a-entity>
+                    </a-entity>
+
+                    <a-entity 
+                    id="hour-plus"
+                    class="ui" 
+                    visible="true" 
+                    mixin="rounded-action-button ui" 
+                    is-remote-hover-target 
+                    tags="singleActionButton: true;" 
+                    scale="0.5 0.5 0.5" 
+                    position="-0.18 0.15 0"
+                    >
+                        <a-entity text="value:+; width:3.0; align:center;" text-raycast-hack position="0 0 0.02"></a-entity>
+                    </a-entity>
+
+                    <a-entity 
+                    id="hour-minus"
+                    class="ui" 
+                    visible="true" 
+                    mixin="rounded-action-button ui" 
+                    is-remote-hover-target 
+                    tags="singleActionButton: true;" 
+                    scale="0.5 0.5 0.5" 
+                    position="-0.18 -0.15 0"
+                    >
+                        <a-entity text="value:-; width:3.0; align:center;" text-raycast-hack position="0 0 0.02"></a-entity>
+                    </a-entity>
+
+                    <a-entity 
+                    id="minute-plus"
+                    class="ui" 
+                    visible="true" 
+                    mixin="rounded-action-button ui" 
+                    is-remote-hover-target 
+                    tags="singleActionButton: true;" 
+                    scale="0.5 0.5 0.5" 
+                    position="-0 0.15 0"
+                    >
+                        <a-entity text="value:+; width:3.0; align:center;" text-raycast-hack position="0 0 0.02"></a-entity>
+                    </a-entity>
+
+                    <a-entity 
+                    id="minute-minus"
+                    class="ui" 
+                    visible="true" 
+                    mixin="rounded-action-button ui" 
+                    is-remote-hover-target 
+                    tags="singleActionButton: true;" 
+                    scale="0.5 0.5 0.5" 
+                    position="-0 -0.15 0"
+                    >
+                        <a-entity text="value:-; width:3.0; align:center;" text-raycast-hack position="0 0 0.02"></a-entity>
+                    </a-entity>
+
+                    <a-entity 
+                    id="second-plus"
+                    class="ui" 
+                    visible="true" 
+                    mixin="rounded-action-button ui" 
+                    is-remote-hover-target 
+                    tags="singleActionButton: true;" 
+                    scale="0.5 0.5 0.5" 
+                    position="0.18 0.15 0"
+                    >
+                        <a-entity text="value:+; width:3.0; align:center;" text-raycast-hack position="0 0 0.02"></a-entity>
+                    </a-entity>
+
+                    <a-entity 
+                    id="second-minus"
+                    class="ui" 
+                    visible="true" 
+                    mixin="rounded-action-button ui" 
+                    is-remote-hover-target 
+                    tags="singleActionButton: true;" 
+                    scale="0.5 0.5 0.5" 
+                    position="0.18 -0.15 0"
+                    >
+                        <a-entity text="value:-; width:3.0; align:center;" text-raycast-hack position="0 0 0.02"></a-entity>
+                    </a-entity>
+
+                  </a-entity>
+            </template>
+
             <template id="linked-media">
                 <a-entity
                     class="interactable"

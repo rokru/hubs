@@ -193,6 +193,7 @@ if (isEmbed && !qs.get("embed_token")) {
 THREE.Object3D.DefaultMatrixAutoUpdate = false;
 
 import "./components/megaphone";
+import "./components/countdown-timer";
 import "./components/trigger";
 import "./components/audio-channel";
 import "./components/action-button";

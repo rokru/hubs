@@ -105,6 +105,7 @@ AFRAME.GLTFModelPlus.registerComponent("visible", "visible", (el, componentName,
    
   el.setAttribute("networked", {
     template: "#visible-element",
+    attachTemplateToLocal: true,
     persistent: true,
     networkId: el.className,
   });
@@ -179,10 +180,21 @@ AFRAME.GLTFModelPlus.registerComponent("frame-trigger", "frame-trigger", (el, co
   //console.log("GLTFModelPlus frame-trigger el", el);
   //console.log("GLTFModelPlus frame-trigger componentData", componentData);
   
-  if(componentData.triggerType =="switch active")
+
+  if(el.sceneEl.querySelector("#clock")==null)
+  {
+    el.setAttribute("networked", {
+      template: "#countdown-timer-element",
+      attachTemplateToLocal: true,
+      persistent: true,
+      networkId: components.networked.id
+    });
+  }
+  else if(componentData.triggerType == "switch active")
   {
     el.setAttribute("networked", {
       template: "#button-element",
+      attachTemplateToLocal: true,
       persistent: true,
       networkId: components.networked.id
     });
