@@ -68,6 +68,7 @@ AFRAME.registerComponent('countdown-timer', {
         console.log("startCountdown");
 
         this.data.isActive = true;
+        this.updateTextElement();
 
         this.data.intervalId = setInterval(function(){
           if(this.data.isActive){
@@ -106,6 +107,8 @@ AFRAME.registerComponent('countdown-timer', {
         this.data.isActive = false;
 
         clearInterval(this.data.intervalId);
+
+        this.updateTextElement();
       },
       setTimer(hour, minute, second)
       {
@@ -120,10 +123,19 @@ AFRAME.registerComponent('countdown-timer', {
         this.validateTime();
         var timeAsString = ""+(this.data.hour.toString().padStart(2,'0') + ":" + this.data.minute.toString().padStart(2,'0') + ":" + this.data.second.toString().padStart(2,'0'));
         this.data.textElement.setAttribute("text", "value:"+timeAsString);
+
+        if(this.data.isActive)
+        {
+          this.data.playPauseButton.querySelector("[text]").setAttribute("text", "value:Pause")
+        }
+        else
+        {
+          this.data.playPauseButton.querySelector("[text]").setAttribute("text", "value:Start")
+        }
       },
       validateTime()
       {
-        this.data.hour = this.data.hour < 0 ? 0 : (this.data.hour > 59 ? 59 :this.data.hour);
+        this.data.hour = this.data.hour < 0 ? 0 : (this.data.hour > 99 ? 99 :this.data.hour);
         this.data.minute = this.data.minute < 0 ? 0 : (this.data.minute > 59 ? 59 :this.data.minute);
         this.data.second = this.data.second < 0 ? 0 : (this.data.second > 59 ? 59 :this.data.second);
       }
