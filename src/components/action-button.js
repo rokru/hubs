@@ -26,12 +26,33 @@ AFRAME.registerComponent("action-button", {
         this.isInitialized = true;
         this.initVariables();
         this.initButtonText();
-        NAF.connection.subscribeToDataChannel(this.el.parentElement.id, 
-          (senderId, dataType, data, targetId)=>{
-          this.data.buttonStatus = data.buttonStatus;
-          this.performAction();
-        })
+
+        switch(this.data.buttonType)
+        {
+          case ACTIONS.TELEPORT:
+            break;
+          case ACTIONS.MEGAPHONE:
+            break;
+          case ACTIONS.SWITCH_VISIBLITY:
+            this.initButtonSubscription();
+            this.data.buttonStatus = this.data.target?.object3D.visible;
+            break; 
+          case ACTIONS.CHANGE_ROOM:
+            break; 
+          case ACTIONS.NONE:
+            break; 
+        }
+
+
       }
+    });
+  },
+  initButtonSubscription()
+  {
+    NAF.connection.subscribeToDataChannel(this.el.parentElement.id, 
+      (senderId, dataType, data, targetId)=>{
+      this.data.buttonStatus = data.buttonStatus;
+      this.performAction();
     });
   },
   tick()
@@ -69,8 +90,11 @@ AFRAME.registerComponent("action-button", {
     this.el.object3D.addEventListener("interact", this.onButtonPressed.bind(this));
   },
   onButtonPressed()
-  {
+  {    
+    this.data.target.setAttribute("isVisible", !this.data.buttonStatus);
     NAF.utils.takeOwnership(this.el);
+    NAF.utils.takeOwnership(this.data.target);
+
     NAF.connection.broadcastData(this.el.parentElement.id, {buttonStatus: this.data.buttonStatus});
     this.performAction();
   },
@@ -136,6 +160,8 @@ AFRAME.registerComponent("action-button", {
     {
       return;
     }
+    console.log(NAF.utils.isMine(this.data.target));
+
     this.data.target.setAttribute("visible", isVisible);
   },
 });

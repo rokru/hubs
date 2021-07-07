@@ -184,20 +184,23 @@ function registerNetworkSchemas() {
   });
 
   NAF.schemas.add({
-    template: "#visible-template",
+    template: "#visible-element",
     components: [
-      "visible"
+      "visible",
+      "isVisible"
     ],
+    nonAuthorizedComponents: ["visible","isVisible"]
   });
 
   NAF.schemas.add({
-    template: "#button-template",
+    template: "#button-element",
     components: [
       {
         component: "action-button",
         property: "buttonStatus"        
       }
     ],
+    nonAuthorizedComponents: ["action-button"]
   });
 
 

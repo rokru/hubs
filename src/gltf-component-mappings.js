@@ -104,8 +104,7 @@ AFRAME.GLTFModelPlus.registerComponent(
 AFRAME.GLTFModelPlus.registerComponent("visible", "visible", (el, componentName, componentData) => {
    
   el.setAttribute("networked", {
-    template: "#visible-template",
-    owner: "scene",
+    template: "#visible-element",
     persistent: true,
     networkId: el.className,
   });
@@ -183,8 +182,7 @@ AFRAME.GLTFModelPlus.registerComponent("frame-trigger", "frame-trigger", (el, co
   if(componentData.triggerType =="switch active")
   {
     el.setAttribute("networked", {
-      template: "#button-template",
-      owner: "scene",
+      template: "#button-element",
       persistent: true,
       networkId: components.networked.id
     });
