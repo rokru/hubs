@@ -1,3 +1,8 @@
+const EVENT_START="EVENT_START";
+const EVENT_PAUSE="EVENT_PAUSE";
+const EVENT_STOP="EVENT_STOP";
+const EVENT_SET_DATA="EVENT_SET_DATA";
+
 AFRAME.registerComponent('countdown-timer', {
   schema: {
     isActive: {type: "boolean", default: false},
@@ -25,30 +30,73 @@ AFRAME.registerComponent('countdown-timer', {
           this.data.playPauseButton.object3D.addEventListener("interact", this.onPlayPause.bind(this));
          
           this.data.StopButton = this.el.querySelector("#stop-button");
-          this.data.StopButton.object3D.addEventListener("interact", this.stopCountdown.bind(this));
+          this.data.StopButton.object3D.addEventListener("interact", ()=>{
+            this.sendNetworkedEvent(EVENT_STOP);
+            this.stopCountdown();
+          });
           
           this.data.hourPlusButton = this.el.querySelector("#hour-plus");
-          this.data.hourPlusButton.object3D.addEventListener("interact", ()=>{this.data.hour++; this.updateTextElement();});
+          this.data.hourPlusButton.object3D.addEventListener("interact", ()=>{this.setTimer(this.data.hour+1,this.data.minute, this.data.second)});
           
           this.data.hourPlusButton = this.el.querySelector("#hour-minus");
-          this.data.hourPlusButton.object3D.addEventListener("interact", ()=>{this.data.hour--; this.updateTextElement();});
+          this.data.hourPlusButton.object3D.addEventListener("interact", ()=>{this.setTimer(this.data.hour-1,this.data.minute, this.data.second)});
           
           this.data.hourPlusButton = this.el.querySelector("#minute-plus");
-          this.data.hourPlusButton.object3D.addEventListener("interact", ()=>{this.data.minute++; this.updateTextElement();});
+          this.data.hourPlusButton.object3D.addEventListener("interact", ()=>{this.setTimer(this.data.hour,this.data.minute+1, this.data.second)});
           
           this.data.hourPlusButton = this.el.querySelector("#minute-minus");
-          this.data.hourPlusButton.object3D.addEventListener("interact", ()=>{this.data.minute--; this.updateTextElement();});
+          this.data.hourPlusButton.object3D.addEventListener("interact", ()=>{this.setTimer(this.data.hour,this.data.minute-1, this.data.second)});
           
           this.data.hourPlusButton = this.el.querySelector("#second-plus");
-          this.data.hourPlusButton.object3D.addEventListener("interact", ()=>{this.data.second++; this.updateTextElement();});
+          this.data.hourPlusButton.object3D.addEventListener("interact", ()=>{this.setTimer(this.data.hour,this.data.minute, this.data.second+1)});
           
           this.data.hourPlusButton = this.el.querySelector("#second-minus");
-          this.data.hourPlusButton.object3D.addEventListener("interact", ()=>{this.data.second--; this.updateTextElement();});
+          this.data.hourPlusButton.object3D.addEventListener("interact", ()=>{this.setTimer(this.data.hour,this.data.minute, this.data.second-1)});
           
-          this.setTimer(0,5,30);
+          this.initButtonSubscriptions();
+          this.updateTextElement();
         };
 
         this.el.sceneEl.addEventListener('model-loaded', initVariablesFunction);
+      },
+      initButtonSubscriptions()
+      {
+        console.log("initButtonSubscriptions", this.el.id);
+        NAF.connection.subscribeToDataChannel(this.el.id, 
+          (senderId, dataType, data, targetId)=>{
+            this.data.hour = data.hour;
+            this.data.minute = data.minute;
+            this.data.second = data.second;
+
+          switch(data.eventType)
+          {
+            case EVENT_START:
+              this.startCountdown();
+              break;
+            case EVENT_PAUSE:
+              this.pauseCountdown();
+              break;
+            case EVENT_STOP:
+              this.stopCountdown();
+              break;
+            case EVENT_SET_DATA:
+              this.updateTextElement();
+              break;
+          }
+        });
+      },
+      sendNetworkedEvent(eventType)
+      {
+        var data = {
+          eventType : eventType,
+          hour: this.data.hour,
+          minute: this.data.minute,
+          second: this.data.second,
+        };
+
+        NAF.connection.broadcastData(this.el.id, data);
+
+        console.log("sendNetworkedEvent", data);
       },
       onPlayPause()
       {
@@ -56,17 +104,18 @@ AFRAME.registerComponent('countdown-timer', {
 
         if(this.data.isActive)
         {
-          this.pauseCountdown();
+        this.sendNetworkedEvent(EVENT_PAUSE);
+        this.pauseCountdown();
         }
         else
         {
+          this.sendNetworkedEvent(EVENT_START);
           this.startCountdown();
         }
       },
       startCountdown()
       {
         console.log("startCountdown");
-
         this.data.isActive = true;
         this.updateTextElement();
 
@@ -117,6 +166,7 @@ AFRAME.registerComponent('countdown-timer', {
         this.data.second = second;
 
         this.updateTextElement();
+        this.sendNetworkedEvent(EVENT_SET_DATA);
       },
       updateTextElement()
       {
