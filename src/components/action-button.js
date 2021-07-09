@@ -1,7 +1,7 @@
 export const ACTIONS ={
   MEGAPHONE: "megaphone",
   TELEPORT: "teleport",
-  SWITCH_VISIBLITY: "switch visibility",  
+  SWITCH_VISIBLITY: "visibility",  
   CHANGE_ROOM: "Change Room",
   NONE: "None",
 };
@@ -18,35 +18,25 @@ AFRAME.registerComponent("action-button", {
     newRoomUrl: { default: "" },
     target: { default: "" },
   },
-  init() {
+  init() {  
     this.el.sceneEl.addEventListener('model-loaded', ()=>{
 
       if(!this.isInitialized)
       {
         this.isInitialized = true;
-        this.initVariables();
+        this.initVariables();          
         this.initButtonText();
-
-        switch(this.data.buttonType)
-        {
-          case ACTIONS.TELEPORT:
-            this.initButtonSubscription();
-            break;
-          case ACTIONS.MEGAPHONE:
-            break;
-          case ACTIONS.SWITCH_VISIBLITY:
-            this.initButtonSubscription();
-            this.data.buttonStatus = this.data.target?.object3D.visible;
-            break; 
-            case ACTIONS.CHANGE_ROOM:
-            this.initButtonSubscription();
-            break; 
-          case ACTIONS.NONE:
-            break; 
-        }
       }
     });
-    console.log(this.data);
+  },
+  checktargetVisibilityStatus()
+  {
+    console.log("checktargetVisibilityStatus");
+    if(this.data.target?.object3D.visible != (this.data.target.getAttribute("isVisible")=="true"))
+    {
+      this.data.target.object3D.visible = this.data.target.getAttribute("isVisible");
+      this.data.buttonStatus = this.data.target.getAttribute("isVisible");
+    } 
   },
   initButtonSubscription()
   {
@@ -55,10 +45,6 @@ AFRAME.registerComponent("action-button", {
       this.data.buttonStatus = data.buttonStatus;
       this.performAction();
     });
-  },
-  tick()
-  {
-
   },
   initVariables()
   {
@@ -70,27 +56,16 @@ AFRAME.registerComponent("action-button", {
     switch(this.data.buttonType)
       {
         case ACTIONS.TELEPORT:
+          this.initButtonSubscription();
           break;
         case ACTIONS.MEGAPHONE:
           break;
         case ACTIONS.SWITCH_VISIBLITY:
-          this.data.buttonStatus = this.data.target?.object3D.visible;
-
-          this.data.target.setAttribute("networked", {
-            template: "#visible-media",
-            attachTemplateToLocal: true,
-            persistent: true,
-            networkId: this.data.target.className,
-          });
-
-          if(NAF.utils.isMine(this.data.target))
-          {
-            this.data.target.setAttribute("visible", this.data.buttonStatus);
-          }
-
-          console.log("action-button init SWITCH_VISIBLITY", this.data.target);
+          this.initButtonSubscription();
+        var intervalId = setInterval(this.checktargetVisibilityStatus, 1000);
           break; 
         case ACTIONS.CHANGE_ROOM:
+          this.initButtonSubscription();
           break; 
         case ACTIONS.NONE:
           break; 
@@ -101,20 +76,20 @@ AFRAME.registerComponent("action-button", {
     let text = (this.data.textLabel? (this.data.textLabel+"\n "):"")+ (this.data.buttonStatus?"Aus":"An");
     this.data.textElement.setAttribute("text", "value:"+text);
    },
-  play() {
+  play() 
+  {
     this.el.object3D.addEventListener("interact", this.onButtonPressed.bind(this));
   },
   onButtonPressed()
   {    
-    console.log("action-button onButtonPressed");
-    this.data.target.setAttribute("isVisible", !this.data.buttonStatus);
-    NAF.utils.takeOwnership(this.data.target);
-    console.log(this.data.target);
-    //this.data.target.setAttribute("isVisible", !this.data.buttonStatus);
-
+    if(this.data.buttonType == ACTIONS.SWITCH_VISIBLITY)
+    {
+      NAF.utils.takeOwnership(this.data.target);
+    }
+    
     NAF.connection.broadcastData(this.el.parentElement.id, {buttonStatus: this.data.buttonStatus});
+    
     this.performAction();
-    this.data.target.setAttribute("isVisible", this.el.className);
   },
   performAction()
   {
@@ -178,7 +153,10 @@ AFRAME.registerComponent("action-button", {
       return;
     }
 
+    console.log("changeVisibility", isVisible);
+
     this.data.target.setAttribute("visible", isVisible);
+    this.data.target.setAttribute("isVisible", isVisible);
   },
 });
 

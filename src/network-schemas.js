@@ -41,6 +41,7 @@ function registerNetworkSchemas() {
       },
       "player-info",
       "networked-avatar",
+      "visible",
       "ismegaphone",
       {
         component: "audio-channel",
@@ -104,6 +105,8 @@ function registerNetworkSchemas() {
       },
       // TODO: Optimize checking mediaOptions with requiresNetworkUpdate.
       "media-loader",
+      "visible",
+      "isVisible",
       {
         component: "media-video",
         property: "time"
@@ -117,7 +120,6 @@ function registerNetworkSchemas() {
         property: "index"
       },
       "pinnable",
-      "visible"
     ],
     nonAuthorizedComponents: [
       {
@@ -184,36 +186,16 @@ function registerNetworkSchemas() {
   });
 
   NAF.schemas.add({
-    template: "#visible-media",
-    components: [
-      "visible",
-      "isVisible"
-    ],
-    nonAuthorizedComponents: ["visible","isVisible"]
-  });
-
-  NAF.schemas.add({
-    template: "#button-element-media",
-    components: [
-      {
-        component: "action-button",
-        property: "buttonStatus"        
-      }
-    ],
-    nonAuthorizedComponents: ["action-button"]
-  });
-
-
-  NAF.schemas.add({
     template: "#static-media",
     components: [
       // TODO: Optimize checking mediaOptions with requiresNetworkUpdate.
       "media-loader",
+      "visible",
+      "isVisible",
       {
         component: "media-video",
         property: "time"
       },
-      "visible"
     ],
     nonAuthorizedComponents: [
       {
@@ -227,8 +209,9 @@ function registerNetworkSchemas() {
     template: "#static-controlled-media",
     components: [
       // TODO: Optimize checking mediaOptions with requiresNetworkUpdate.
-      "media-loader",
+      "isVisible",
       "visible",
+      "media-loader",
       {
         component: "media-video",
         property: "time"
@@ -273,7 +256,9 @@ function registerNetworkSchemas() {
         component: "scale",
         requiresNetworkUpdate: vectorRequiresUpdate(0.001)
       },
-      "networked-drawing"
+      "networked-drawing",
+      "isVisible",
+       "visible",
     ]
   });
 

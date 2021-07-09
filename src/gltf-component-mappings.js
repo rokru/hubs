@@ -172,34 +172,6 @@ AFRAME.GLTFModelPlus.registerComponent("frame-trigger", "frame-trigger", (el, co
   //console.log("GLTFModelPlus frame-trigger el", el);
   //console.log("GLTFModelPlus frame-trigger componentData", componentData);
   
-  if(el.sceneEl.querySelector("#clock")==null)
-  {
-    el.setAttribute("networked", {
-      template: "#countdown-timer-element",
-      attachTemplateToLocal: true,
-      persistent: true,
-      owner: "scene",
-      networkId: components.networked.id
-    });
-  }
-  else if(componentData.triggerType == "switch active")
-  {
-    el.setAttribute("networked", {
-      template: "#button-element",
-      attachTemplateToLocal: true,
-      persistent: true,
-      networkId: components.networked.id
-    });
-    
-    el.querySelector(".action-button").setAttribute("action-button", {
-      target: componentData.targetName,
-      textLabel: componentData.targetName,
-      buttonType: "switch visibility",
-      isSwitchButton: true,
-    });
-  }
-  else
-  {
     el.setAttribute("networked", {
       template: "#interactable-frame-trigger",
       owner: "scene",
@@ -218,7 +190,6 @@ AFRAME.GLTFModelPlus.registerComponent("frame-trigger", "frame-trigger", (el, co
     });
 
     el.setAttribute("trigger", componentData);
-  }
 });
 
 AFRAME.GLTFModelPlus.registerComponent("countdown-timer", "countdown-timer", (el, componentName, componentData, components) => {
@@ -307,6 +278,8 @@ async function mediaInflator(el, componentName, componentData, components) {
     const hasVolume = componentName === "video" || componentName === "audio";
     const templateName =
       componentName === "model" || isControlled || hasVolume ? "#static-controlled-media" : "#static-media";
+
+    console.log("networked media", el, templateName);
 
     el.setAttribute("networked", {
       template: templateName,
