@@ -46,6 +46,7 @@ AFRAME.registerComponent("action-button", {
         }
       }
     });
+    console.log(this.data);
   },
   initButtonSubscription()
   {
@@ -108,6 +109,8 @@ AFRAME.registerComponent("action-button", {
     console.log("action-button onButtonPressed");
     this.data.target.setAttribute("isVisible", !this.data.buttonStatus);
     NAF.utils.takeOwnership(this.data.target);
+    console.log(this.data.target);
+    //this.data.target.setAttribute("isVisible", !this.data.buttonStatus);
 
     NAF.connection.broadcastData(this.el.parentElement.id, {buttonStatus: this.data.buttonStatus});
     this.performAction();

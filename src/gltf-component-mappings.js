@@ -243,11 +243,15 @@ AFRAME.GLTFModelPlus.registerComponent("action-button", "action-button", (el, co
   });
   
   el.querySelector(".action-button").setAttribute("action-button", {
-    target: componentData.targetName,
-    textLabel: componentData.targetName,
-    buttonType: "switch visibility",
-    isSwitchButton: true,
+    target: componentData.targetName,    
+    textLabel: componentData.buttonLabel,
+    buttonType: componentData.buttonType,
+    buttonStatus: componentData.buttonStatus,
+    newRoomUrl: componentData.newRoomUrl,
+    isSwitchButton: componentData.isSwitchButton,
   });
+  console.log("Button Data:");
+  console.log(componentData);
 });
 
 AFRAME.GLTFModelPlus.registerComponent("media", "media", (el, componentName, componentData) => {
