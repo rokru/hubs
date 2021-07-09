@@ -2,6 +2,7 @@ const EVENT_START="EVENT_START";
 const EVENT_PAUSE="EVENT_PAUSE";
 const EVENT_STOP="EVENT_STOP";
 const EVENT_SET_DATA="EVENT_SET_DATA";
+const EVENT_RESPONSE_INIT="EVENT_RESPONSE_INIT";
 
 AFRAME.registerComponent('countdown-timer', {
   schema: {
@@ -31,7 +32,7 @@ AFRAME.registerComponent('countdown-timer', {
          
           this.data.StopButton = this.el.querySelector("#stop-button");
           this.data.StopButton.object3D.addEventListener("interact", ()=>{
-            this.sendNetworkedEvent(EVENT_STOP);
+            this.broadcastNetworkEvent(EVENT_STOP);
             this.stopCountdown();
           });
           
@@ -55,37 +56,57 @@ AFRAME.registerComponent('countdown-timer', {
           
           this.initButtonSubscriptions();
           this.updateTextElement();
+
+          document.body.addEventListener('clientConnected', function (evt) {
+            if(NAF.utils.isMine(this.el))
+            {
+              this.sendInitData(evt.detail.clientId);
+            }
+          }.bind(this));
         };
 
         this.el.sceneEl.addEventListener('model-loaded', initVariablesFunction);
       },
       initButtonSubscriptions()
       {
-        console.log("initButtonSubscriptions", this.el.id);
+        console.log("countdown-timer initButtonSubscriptions", this.el.id);
         NAF.connection.subscribeToDataChannel(this.el.id, 
           (senderId, dataType, data, targetId)=>{
+            console.log("countdown-timer data received", data.eventType);
+
             this.data.hour = data.hour;
             this.data.minute = data.minute;
             this.data.second = data.second;
 
-          switch(data.eventType)
-          {
-            case EVENT_START:
-              this.startCountdown();
-              break;
-            case EVENT_PAUSE:
-              this.pauseCountdown();
-              break;
-            case EVENT_STOP:
-              this.stopCountdown();
-              break;
-            case EVENT_SET_DATA:
-              this.updateTextElement();
-              break;
-          }
+            switch(data.eventType)
+            {
+            case EVENT_RESPONSE_INIT:
+                console.log("countdown-timer EVENT_RESPONSE_INIT");
+                if(data.isActive)
+                {
+                  this.startCountdown();
+                }
+                else
+                {
+                  this.pauseCountdown();
+                }
+                break;
+              case EVENT_START:
+                this.startCountdown();
+                break;
+              case EVENT_PAUSE:
+                this.pauseCountdown();
+                break;
+              case EVENT_STOP:
+                this.stopCountdown();
+                break;
+              case EVENT_SET_DATA:
+                this.updateTextElement();
+                break;
+            }
         });
       },
-      sendNetworkedEvent(eventType)
+      broadcastNetworkEvent(eventType)
       {
         var data = {
           eventType : eventType,
@@ -96,26 +117,39 @@ AFRAME.registerComponent('countdown-timer', {
 
         NAF.connection.broadcastData(this.el.id, data);
 
-        console.log("sendNetworkedEvent", data);
+        console.log("countdown-timer broadcastNetworkEvent", data);
+      },
+      sendInitData(clientId)
+      {
+        var data = {
+          eventType : EVENT_RESPONSE_INIT,
+          isActive:   this.data.isActive,
+          hour:       this.data.hour,
+          minute:     this.data.minute,
+          second:     this.data.second,
+        };
+        
+        NAF.connection.sendData(clientId, this.el.id, data);
+        console.log("countdown-timer sendInitData", data);
       },
       onPlayPause()
       {
-        console.log("onPlayPause");
+        console.log("countdown-timer onPlayPause");
 
         if(this.data.isActive)
         {
-        this.sendNetworkedEvent(EVENT_PAUSE);
+        this.broadcastNetworkEvent(EVENT_PAUSE);
         this.pauseCountdown();
         }
         else
         {
-          this.sendNetworkedEvent(EVENT_START);
+          this.broadcastNetworkEvent(EVENT_START);
           this.startCountdown();
         }
       },
       startCountdown()
       {
-        console.log("startCountdown");
+        console.log("countdown-timer startCountdown");
         this.data.isActive = true;
         this.updateTextElement();
 
@@ -142,7 +176,7 @@ AFRAME.registerComponent('countdown-timer', {
       },
       stopCountdown()
       {
-        console.log("stopCountdown");
+        console.log("countdown-timer stopCountdown");
 
         this.data.isActive = false;
         clearInterval(this.data.intervalId);
@@ -151,7 +185,7 @@ AFRAME.registerComponent('countdown-timer', {
       },
       pauseCountdown()
       {
-        console.log("pauseCountdown");
+        console.log("countdown-timer pauseCountdown");
 
         this.data.isActive = false;
 
@@ -161,12 +195,14 @@ AFRAME.registerComponent('countdown-timer', {
       },
       setTimer(hour, minute, second)
       {
+        //NAF.utils.takeOwnership(this.el)
+
         this.data.hour = hour;
         this.data.minute = minute;
         this.data.second = second;
 
         this.updateTextElement();
-        this.sendNetworkedEvent(EVENT_SET_DATA);
+        this.broadcastNetworkEvent(EVENT_SET_DATA);
       },
       updateTextElement()
       {

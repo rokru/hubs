@@ -42,8 +42,6 @@ AFRAME.registerComponent("action-button", {
           case ACTIONS.NONE:
             break; 
         }
-
-
       }
     });
   },
@@ -91,9 +89,8 @@ AFRAME.registerComponent("action-button", {
   },
   onButtonPressed()
   {    
+    console.log("action-button onButtonPressed");
     this.data.target.setAttribute("isVisible", !this.data.buttonStatus);
-    NAF.utils.takeOwnership(this.el);
-    NAF.utils.takeOwnership(this.data.target);
 
     NAF.connection.broadcastData(this.el.parentElement.id, {buttonStatus: this.data.buttonStatus});
     this.performAction();
@@ -102,7 +99,6 @@ AFRAME.registerComponent("action-button", {
   {
     try
     { 
-
       if(this.data.isSwitchButton)
       {
         this.data.buttonStatus = !this.data.buttonStatus;
@@ -160,7 +156,6 @@ AFRAME.registerComponent("action-button", {
     {
       return;
     }
-    console.log(NAF.utils.isMine(this.data.target));
 
     this.data.target.setAttribute("visible", isVisible);
   },
