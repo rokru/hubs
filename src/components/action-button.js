@@ -30,6 +30,7 @@ AFRAME.registerComponent("action-button", {
         switch(this.data.buttonType)
         {
           case ACTIONS.TELEPORT:
+            this.initButtonSubscription();
             break;
           case ACTIONS.MEGAPHONE:
             break;
@@ -37,7 +38,8 @@ AFRAME.registerComponent("action-button", {
             this.initButtonSubscription();
             this.data.buttonStatus = this.data.target?.object3D.visible;
             break; 
-          case ACTIONS.CHANGE_ROOM:
+            case ACTIONS.CHANGE_ROOM:
+            this.initButtonSubscription();
             break; 
           case ACTIONS.NONE:
             break; 
@@ -72,6 +74,20 @@ AFRAME.registerComponent("action-button", {
           break;
         case ACTIONS.SWITCH_VISIBLITY:
           this.data.buttonStatus = this.data.target?.object3D.visible;
+
+          this.data.target.setAttribute("networked", {
+            template: "#visible-media",
+            attachTemplateToLocal: true,
+            persistent: true,
+            networkId: this.data.target.className,
+          });
+
+          if(NAF.utils.isMine(this.data.target))
+          {
+            this.data.target.setAttribute("visible", this.data.buttonStatus);
+          }
+
+          console.log("action-button init SWITCH_VISIBLITY", this.data.target);
           break; 
         case ACTIONS.CHANGE_ROOM:
           break; 
@@ -91,9 +107,11 @@ AFRAME.registerComponent("action-button", {
   {    
     console.log("action-button onButtonPressed");
     this.data.target.setAttribute("isVisible", !this.data.buttonStatus);
+    NAF.utils.takeOwnership(this.data.target);
 
     NAF.connection.broadcastData(this.el.parentElement.id, {buttonStatus: this.data.buttonStatus});
     this.performAction();
+    this.data.target.setAttribute("isVisible", this.el.className);
   },
   performAction()
   {

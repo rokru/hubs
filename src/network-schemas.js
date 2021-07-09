@@ -184,7 +184,7 @@ function registerNetworkSchemas() {
   });
 
   NAF.schemas.add({
-    template: "#visible-element",
+    template: "#visible-media",
     components: [
       "visible",
       "isVisible"
@@ -193,7 +193,7 @@ function registerNetworkSchemas() {
   });
 
   NAF.schemas.add({
-    template: "#button-element",
+    template: "#button-element-media",
     components: [
       {
         component: "action-button",

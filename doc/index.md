@@ -229,6 +229,12 @@ Sets player info state, including avatar choice and display name.
 
 `src/components/player-info.js`
           
+<a name="components/countdown-timer"></a>
+#### countdown-timer
+
+Stores networked timer state.
+
+`src/components/countdown-timer.js`
 
 <a name="components/avatar/spawn-controller"></a>
 #### spawn-controller
