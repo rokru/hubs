@@ -29,15 +29,6 @@ AFRAME.registerComponent("action-button", {
       }
     });
   },
-  checktargetVisibilityStatus()
-  {
-    console.log("checktargetVisibilityStatus");
-    if(this.data.target?.object3D.visible != (this.data.target.getAttribute("isVisible")=="true"))
-    {
-      this.data.target.object3D.visible = this.data.target.getAttribute("isVisible");
-      this.data.buttonStatus = this.data.target.getAttribute("isVisible");
-    } 
-  },
   initButtonSubscription()
   {
     NAF.connection.subscribeToDataChannel(this.el.parentElement.id, 
@@ -62,7 +53,6 @@ AFRAME.registerComponent("action-button", {
           break;
         case ACTIONS.SWITCH_VISIBLITY:
           this.initButtonSubscription();
-        var intervalId = setInterval(this.checktargetVisibilityStatus, 1000);
           break; 
         case ACTIONS.CHANGE_ROOM:
           this.initButtonSubscription();
@@ -82,7 +72,7 @@ AFRAME.registerComponent("action-button", {
   },
   onButtonPressed()
   {    
-    if(this.data.buttonType == ACTIONS.SWITCH_VISIBLITY)
+    if(this.data?.target.components["networked"])
     {
       NAF.utils.takeOwnership(this.data.target);
     }

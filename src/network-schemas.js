@@ -206,6 +206,17 @@ function registerNetworkSchemas() {
   });
 
   NAF.schemas.add({
+    template: "#particle-emitter",
+    components: [
+      "visible",
+      "isVisible",
+    ],
+    nonAuthorizedComponents: [
+      "visible",
+      "isVisible",
+    ]});
+
+  NAF.schemas.add({
     template: "#static-controlled-media",
     components: [
       // TODO: Optimize checking mediaOptions with requiresNetworkUpdate.

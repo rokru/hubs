@@ -474,7 +474,16 @@ AFRAME.GLTFModelPlus.registerComponent("trimesh", "trimesh", el => {
   });
 });
 
-AFRAME.GLTFModelPlus.registerComponent("particle-emitter", "particle-emitter");
+AFRAME.GLTFModelPlus.registerComponent("particle-emitter", "particle-emitter", (el, componentName, componentData) => {
+  el.setAttribute("networked", {
+    template: "#particle-emitter",
+    owner: "scene",
+    persistent: true,
+    networkId: "123456789"
+  });
+
+  el.setAttribute("particle-emitter", componentData);
+});
 
 AFRAME.GLTFModelPlus.registerComponent("networked-drawing-buffer", "networked-drawing-buffer");
 
