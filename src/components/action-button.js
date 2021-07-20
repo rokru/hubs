@@ -3,6 +3,7 @@ export const ACTIONS ={
   TELEPORT: "teleport",
   SWITCH_VISIBLITY: "visibility",  
   CHANGE_ROOM: "Change Room",
+  ANIMATION: "Animation",
   NONE: "None",
 };
 
@@ -20,7 +21,6 @@ AFRAME.registerComponent("action-button", {
   },
   init() {  
     this.el.sceneEl.addEventListener('model-loaded', ()=>{
-
       if(!this.isInitialized)
       {
         this.isInitialized = true;
@@ -58,6 +58,10 @@ AFRAME.registerComponent("action-button", {
           this.initButtonSubscription();
           break; 
         case ACTIONS.NONE:
+          break;         
+        case ACTIONS.ANIMATION:
+          this.initButtonSubscription();
+          this.toggleAnimation(this.data.buttonStatus);
           break; 
       }
   },
@@ -108,11 +112,25 @@ AFRAME.registerComponent("action-button", {
           break; 
         case ACTIONS.NONE	:
           break; 
+        case ACTIONS.ANIMATION:
+          this.toggleAnimation(this.data.buttonStatus);
+          break; 
       }
     }
     catch(error)
     {
       console.error(error);
+    }
+  },
+  toggleAnimation(animationStatus)
+  {
+    if(animationStatus)
+    {
+      this.data.target.components['loop-animation'].startAnimation();
+    }
+    else
+    {
+      this.data.target.components['loop-animation'].stopAnimation();
     }
   },
   teleport: function()
@@ -142,8 +160,6 @@ AFRAME.registerComponent("action-button", {
     {
       return;
     }
-
-    console.log("changeVisibility", isVisible);
 
     this.data.target.setAttribute("visible", isVisible);
     this.data.target.setAttribute("isVisible", isVisible);

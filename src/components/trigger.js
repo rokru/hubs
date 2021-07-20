@@ -91,7 +91,6 @@ AFRAME.registerComponent('trigger', {
       },
       initState: function()
       {
-        //console.log("trigger initState", this.data.triggerType);
         switch(this.data.triggerType)
         {
           case ACTIONS.TELEPORT:
@@ -132,8 +131,6 @@ AFRAME.registerComponent('trigger', {
       },
       setupCollisionGroup: function()
       {
-        //console.log("trigger setupCollisionGroup", this.data.cMask);
-
         let collisionMask = 0;
 
           switch(this.data.triggerType)
@@ -220,8 +217,6 @@ AFRAME.registerComponent('trigger', {
       },
       onTriggerEnter: function(element)
       {
-        //console.log("trigger onTriggerEnter", element);
-
         switch(this.data.triggerType)
         {
           case ACTIONS.TELEPORT:
@@ -258,8 +253,6 @@ AFRAME.registerComponent('trigger', {
       },
       onTriggerLeft: function(element)
       {
-        //console.log("trigger onTriggerLeft", element);
-
         switch(this.data.triggerType)
         {
           case ACTIONS.TELEPORT:
@@ -293,9 +286,6 @@ AFRAME.registerComponent('trigger', {
       },
       setAudioZone: function(element, channelNumber)
       {
-        //console.log("trigger setAudioZone", element);
-        //console.log("trigger channelNumber", channelNumber);
-
         if(!this.data.avatar.components["audio-channel"])
         {
           return;
@@ -321,14 +311,11 @@ AFRAME.registerComponent('trigger', {
       },
       changeMegaphone: function(isActivated)
       {
-        //console.log("trigger changeMegaphone", isActivated);
 
         this.data.avatar.setAttribute("ismegaphone",isActivated);
       },
       teleportElement: function(element, targetClassName)
       {
-        //console.log("trigger teleportElement", element);
-        //console.log("trigger teleportElement", targetClassName);
 
         if(!NAF.utils.isMine(element))
         {
@@ -336,8 +323,6 @@ AFRAME.registerComponent('trigger', {
         }
 
         const position = document.querySelector("."+targetClassName);
-        //console.log("trigger teleport targetClassName", targetClassName);
-        //console.log("trigger teleport position", position);
 
         if(element.className=="AvatarRoot" || element.className=="Head")
         {
@@ -364,15 +349,10 @@ AFRAME.registerComponent('trigger', {
       },
       changeVisibility: function(element, isVisible)
       {
-        //console.log("trigger changeVisibility", element);
-        //console.log("trigger changeVisibility", isVisible);
-
         element.setAttribute("visible", isVisible);
       },
       snap: function(element)
       {
-        //console.log("trigger snap", element);
-
         if(element.components["floaty-object"])
         {
           element.components["floaty-object"].setLocked(true); 
@@ -383,8 +363,6 @@ AFRAME.registerComponent('trigger', {
       },
       enterNewRoom: function()
       {
-        //console.log("enterNewRoom", this.data.newRoomUrl);
-
         if(this.data.newRoomUrl != "" && this.data.newRoomUrl != null)
         {
           window.open(this.data.newRoomUrl,"_self");
@@ -398,8 +376,6 @@ AFRAME.registerComponent('trigger', {
         }
 
         var size = isScaled ? this.data.size : 0.9;
-
-        //console.log("trigger scale element", element);
 
         if(element.className=="AvatarRoot" || element.className=="Head")
         {

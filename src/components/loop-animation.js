@@ -1,3 +1,4 @@
+import { LoopPingPong } from "three";
 import { findAncestorWithComponent } from "../utils/scene-graph";
 
 /**
@@ -75,7 +76,8 @@ AFRAME.registerComponent("loop-animation", {
     for (let i = 0; i < clips.length; i++) {
       const action = mixer.clipAction(clips[i], this.el.object3D);
       action.enabled = true;
-      action.setLoop(THREE.LoopRepeat, Infinity).play();
+      action.setLoop(THREE.LoopRepeat, Infinity);
+      action.play();
       this.currentActions.push(action);
     }
   },
@@ -86,5 +88,29 @@ AFRAME.registerComponent("loop-animation", {
       this.currentActions[i].stop();
     }
     this.currentActions.length = 0;
+  },
+
+  startAnimation()
+  {      
+    for (let i = 0; i < this.currentActions.length; i++) {
+      const action = this.currentActions[i];
+      action.enabled = true;
+      action.setEffectiveTimeScale(1);
+      action.setLoop(THREE.LoopOnce);
+      action.clampWhenFinished = true;
+      action.play();
+    }
+  },
+  stopAnimation()
+  {
+    for (let i = 0; i < this.currentActions.length; i++) {
+      const action = this.currentActions[i];
+      action.enabled = true;
+      action.paused = false;
+      action.setEffectiveTimeScale(-1);
+      action.setLoop(THREE.LoopOnce);
+      action.clampWhenFinished = false;
+      action.play();
+    }
   }
 });
