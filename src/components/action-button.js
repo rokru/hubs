@@ -17,7 +17,7 @@ AFRAME.registerComponent("action-button", {
     buttonStatus: { default: false },
     isSwitchButton: {default: false},
     newRoomUrl: { default: "" },
-    target: { default: "" },
+    target: { default: null },
   },
   init() {  
     this.el.sceneEl.addEventListener('model-loaded', ()=>{
@@ -41,7 +41,8 @@ AFRAME.registerComponent("action-button", {
   {
     this.data.textElement = this.el.querySelector("[text]");
     this.data.target = this.data.target.replaceAll(" ", "_");
-    this.data.target = this.data.target ? document.querySelector("."+this.data.target): "";
+    this.data.target = this.data.target.replaceAll(".", "");
+    this.data.target = this.data.target ? document.querySelector("."+this.data.target): null;
     this.data.avatar = document.querySelector("#avatar-rig");
 
     switch(this.data.buttonType)
@@ -76,7 +77,9 @@ AFRAME.registerComponent("action-button", {
   },
   onButtonPressed()
   {    
-    if(this.data?.target.components["networked"])
+    console.log(this.data.target);
+
+    if(this.data.target?.components["networked"])
     {
       NAF.utils.takeOwnership(this.data.target);
     }
