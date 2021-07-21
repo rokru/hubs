@@ -200,9 +200,6 @@ AFRAME.GLTFModelPlus.registerComponent("countdown-timer", "countdown-timer", (el
     owner: "scene",
     networkId: components.networked.id
   });
-
-  this.avatarRig.setAttribute("networked", "template: #remote-avatar; attachTemplateToLocal: false;");
-
 });
 
 AFRAME.GLTFModelPlus.registerComponent("action-button", "action-button", (el, componentName, componentData, components) => {
